@@ -16,7 +16,7 @@ Functionalities:
     * Customizable cell view
 * add/edit action from a given Form
 
-Todo:
+TODO:
 ------------------------
 * Auto add/edit form generation
 * Export
@@ -48,6 +48,7 @@ Controller
         protected $pageTitle = 'Entity manager';
         protected $controllerName = 'comment';
         protected $entityClass = 'Kodify\AcmeBundle\Entity\Comment';
+        protected $formClassName = 'Kodify\AcmeBundle\Form\CommentType';
 
         /**
          * @Route("/comment/list", name="get_comment")
@@ -59,7 +60,7 @@ Controller
             //$this->addAction = false; //to show or not add input
             $this->actions = array(
                 array(
-                    'route_name' => 'cut',//route_name + $this->controllerName should match an existing route
+                    'route_name' => 'reply',//route_name + $this->controllerName should match an existing route
                     'ico' => 'wrench'//http://twitter.github.com/bootstrap/base-css.html#icons
                 )
             );
@@ -78,10 +79,10 @@ Controller
         }
 
         /**
-         * @Route("/comment/acme/{id}", name="cut_comment", requirements={"id"="\d+"})
+         * @Route("/comment/reply/{id}", name="reply_comment", requirements={"id"="\d+"})
          * @return \Symfony\Component\HttpFoundation\Response
          */
-        public function acmeCommentAction($id)
+        public function replyCommentAction($id)
         {
             ...
         }
@@ -98,7 +99,7 @@ Controller
                     'filterable' => true,
                     'default_sort_order' => 'DESC',
                     'key' => 'id', //entity field
-                    'class' => 'input-micro'//input width from bootstrap [input-micro, input-mini, input-smal...]
+                    'class' => 'input-micro'//input width from bootstrap [input-micro, input-mini, input-small...]
                 ),
                 array(
                     'label' => 'Original filename',
@@ -179,6 +180,12 @@ Repository to show grid with relationed entities
         protected $selectEntities = 'p, Post';
         protected $selectLeftJoin = array(array('field' => 'p.test', 'alias' => 'Comment'));
     }
+
+
+Screenshot
+------------
+![Alt text](http://i.imgur.com/vWKXt.png "SimpleCrudBundle")
+
 
 
 Installation
