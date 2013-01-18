@@ -1,5 +1,5 @@
 {
-    "name":         "kodify/SimpleCrudBundle",
+    "name":         "kodify/simple-crud-bundle",
     "type":         "library",
     "description":  "SimpleCrudBundle",
     "keywords":     ["crud","kodify","simple crud"],
