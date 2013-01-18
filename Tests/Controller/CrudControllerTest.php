@@ -12,12 +12,12 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
 
 use Kodify\SimpleCrudBundle\Controller\CrudController;
-use Kodify\TestsBundle\Tests\ControllerBaseClass;
+use Kodify\SimpleCrudBundle\Tests\TestBaseClass;
 
 /**
  * @group crud
  */
-class CrudControllerTest extends ControllerBaseClass
+class CrudControllerTest extends TestBaseClass
 {
     private function callControllerMethod($methodName, $params = array(), $request = null, $obj = null)
     {
