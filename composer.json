@@ -1,0 +1,42 @@
+{
+    "name":         "kodify/SimpleCrudBundle",
+    "type":         "library",
+    "description":  "SimpleCrudBundle",
+    "keywords":     ["crud","kodify","simple crud"],
+    "version":      "1.0.0",
+    "time":         "2013-01-18",
+    "homepage":     "https://github.com/kodify/SimpleCrudBundle",
+    "license":      "Apache-2.0",
+    "authors":      [
+        {
+            "name": "Tomoki Kamo",
+            "email": "tomoki@kodify.io"
+        },
+        {
+            "name": "Fernando Palomo",
+            "email": "fernando@kodify.io"
+        },
+        {
+            "name": "Natxo Treig",
+            "email": "natxo@kodify.io"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/symfony": "2.1.*",
+        "doctrine/orm": ">=2.2.3,<2.4-dev",
+        "doctrine/doctrine-bundle": "1.0.*"
+    },
+    "require-dev": {
+        "php": ">=5.3.3",
+        "symfony/symfony": "2.1.*",
+        "doctrine/doctrine-bundle": "1.0.*",
+        "doctrine/orm": ">=2.2.3,<2.4-dev",
+        "mockery/mockery":  "*"
+    },
+    "autoload": {
+        "psr-0": { "Kodify\\SimpleCrudBundle":"" }
+    },
+    "minimum-stability": "dev",
+    "target-dir": "Kodify/SimpleCrudBundle"
+}
