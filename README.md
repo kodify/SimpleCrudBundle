@@ -2,18 +2,18 @@ SimpleCrudBundle
 ================
 Simple CRUD bundle for Symfony2 Framework.
 
-What is this Downloader?
+What is this Bundle?
 ------------------------
-This bundle aims to solve the gap between using SonataAdminBundle and begin from scratch.
+This bundle aims to fill the gap between SonataAdminBundle and begin from scratch.
 
 
 Functionalities:
 ------------------------
 * Grid: Entity list
-** Sort
-** Filter
-** Pagination
-** Customizable cell view
+    * Sort
+    * Filter
+    * Pagination
+    * Customizable cell view
 * add/edit action from a given Form
 
 Todo:
@@ -30,7 +30,9 @@ Examples:
 Controller
 -------------------------------------------
 
-<?php
+/**
+ * Example class
+ */
 
 namespace Kodify\AcmeBundle\Controller;
 
@@ -147,7 +149,11 @@ Repository
 
 Simple Repository
 ----------------------
-<?php
+
+/**
+ * Example class
+ */
+
 namespace Kodify\AcmeBundle\Repository;
 
 use Kodify\SimpleCrudBundle\Repository\AbstractCrudRepository;
@@ -160,7 +166,10 @@ class TagRepository extends AbstractCrudRepository
 Repository to show grid with relationed entities
 ----------------------
 
-<?php
+/**
+ * Example class
+ */
+ 
 namespace Kodify\AcmeBundle\Repository;
 
 use Kodify\SimpleCrudBundle\Repository\AbstractCrudRepository;
