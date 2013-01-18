@@ -150,35 +150,35 @@ Repository
 Simple Repository
 ----------------------
 
-/**
- * Example class
- */
+    /**
+     * Example class
+     */
 
-namespace Kodify\AcmeBundle\Repository;
+    namespace Kodify\AcmeBundle\Repository;
 
-use Kodify\SimpleCrudBundle\Repository\AbstractCrudRepository;
+    use Kodify\SimpleCrudBundle\Repository\AbstractCrudRepository;
 
-class TagRepository extends AbstractCrudRepository
-{
+    class TagRepository extends AbstractCrudRepository
+    {
 
-}
+    }
 
 Repository to show grid with relationed entities
 ----------------------
 
-/**
- * Example class
- */
+    /**
+     * Example class
+     */
 
-namespace Kodify\AcmeBundle\Repository;
+    namespace Kodify\AcmeBundle\Repository;
 
-use Kodify\SimpleCrudBundle\Repository\AbstractCrudRepository;
+    use Kodify\SimpleCrudBundle\Repository\AbstractCrudRepository;
 
-class ClipRepository extends AbstractCrudRepository
-{
-    protected $selectEntities = 'p, Post';
-    protected $selectLeftJoin = array(array('field' => 'p.test', 'alias' => 'Comment'));
-}
+    class ClipRepository extends AbstractCrudRepository
+    {
+        protected $selectEntities = 'p, Post';
+        protected $selectLeftJoin = array(array('field' => 'p.test', 'alias' => 'Comment'));
+    }
 
 
 Installation
