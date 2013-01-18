@@ -12,35 +12,14 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
 
 use Kodify\SimpleCrudBundle\Repository\AbstractCrudRepository;
-use Kodify\TestsBundle\Tests\ControllerBaseClass;
+use Kodify\SimpleCrudBundle\Tests\TestBaseClass;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
 /**
  * @group crud
  */
-class CrudRepository extends ControllerBaseClass
+class CrudRepository extends TestBaseClass
 {
-	private $em = null;
-
-	public function setUp()
-    {
-        static::$kernel = static::createKernel();
-        static::$kernel->boot();
-
-        $this->em = static::$kernel->getContainer()
-            ->get('doctrine')
-            ->getEntityManager();
-
-    }
-
-    public function tearDown()
-    {
-        if ($this->em != null) {
-            $this->em->close();
-        }
-        parent::tearDown();
-    }
-
 	private function callControllerMethod($methodName, $params = array(), $changeProtectedAttributes = array())
     {
         $foo = self::getMethod('Kodify\SimpleCrudBundle\Repository\AbstractCrudRepository', $methodName);
