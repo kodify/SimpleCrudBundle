@@ -1,0 +1,26 @@
+{% if app.session.hasFlash('success') or app.session.hasFlash('error') or app.session.hasFlash('info') %}
+    <div id="action_messages">
+        {% if app.session.hasFlash('error') %}
+            <div class="alert alert-block alert-error">
+                 <a class="close" data-dismiss="alert" href="#">X</a>
+                 <h4 class="alert-heading">Error!</h4>
+                 {{ app.session.flash('error') }}
+            </div>
+        {% endif %}
+        {% if app.session.hasFlash('success') %}
+            <div class="alert alert-block alert-success">
+                 <a class="close" data-dismiss="alert" href="#">X</a>
+                 <h4 class="alert-heading">Success!</h4>
+                 {{ app.session.flash('success') }}
+            </div>
+        {% endif %}
+        {% if app.session.hasFlash('info') %}
+            <div class="alert alert-block alert-info">
+                 <a class="close" data-dismiss="alert" href="#">X</a>
+                 <h4 class="alert-heading">Info</h4>
+                 {{ app.session.flash('info') }}
+            </div>
+        {% endif %}
+    </div>
+{% endif %}
+

@@ -1,0 +1,77 @@
+<thead>
+    <form method="POST" id="crud_filter_form">
+        <tr class="header_row">
+            {% for row in table_header %}
+                <th>
+                    {% if row.sortable is defined and row.sortable  %}
+                        <a id="crud_sort_{{ row.key }}" class="sort_index" data-sort-field="{{ row.key }}">
+                            {% if   current_sort[row.key]['field'] is defined and
+                                    current_sort[row.key]['field'] != '' and
+                                    current_sort[row.key]['direction'] is defined %}
+                                {% if current_sort[row.key]['direction'] == "ASC" %}
+                                    <i class="icon-white icon-arrow-up"></i>
+                                {% elseif current_sort[row.key]['direction'] == 'DESC' %}
+                                    <i class="icon-white icon-arrow-down"></i>
+                                {% endif %}
+                            {% endif %}
+                    {% endif %}
+                    {{ row.label }}
+                    {% if row.sortable is defined and row.sortable  %}
+                        </a>
+                        {% set direction = row.default_sort_order | default('ASC')  %}
+                        {% if current_sort[row.key]['direction'] is defined %}
+                            {% set direction = current_sort[row.key]['direction'] %}
+                        {% endif %}
+                        <input   type="hidden"
+                                id="sort_{{ row.key }}_dir"
+                                name="sort[{{ row.key }}][direction]"
+                                value="{{ direction }}"
+                        >
+                    {% endif %}
+                </th>
+            {% endfor %}
+            {% if has_row_actions %}
+                <th>Actions</th>
+            {% endif %}
+            {% set field = current_sort_field | default('')  %}
+            <input type="hidden" id="sort_field" name="sort[field]" value="{{ field }}">
+            {% set dir = current_sort_direction | default('')  %}
+            <input type="hidden" id="sort_dir" name="sort[dir]" value="{{ dir }}">
+        </tr>
+        <tr class="filter">
+            <input type="hidden" name="form[page_size]" id="crud_form_page_size" value="{{ current_page_size }}">
+            <input type="hidden" name="form[current_page]" id="crud_form_current_page" value="{{ current_page }}">
+            {% for row in table_header %}
+                {% if row.filterable is defined and row.filterable  %}
+                    {% if row.options is defined %}
+                        <th><select class="{{ row.class |default('input-small') }}" name="filter[{{ row.key }}]" id="filter_{{ row.key }}">
+                            <option value=""></option>
+                            {% for optionKey,option in row.options %}
+                                {% set curFil = current_filter[row.key] | default("")  %}
+                                <option value="{{ optionKey }}" {% if curFil != "" and curFil == optionKey %}selected{% endif %}>{{ option }}</option>
+                            {% endfor %}
+                        </select></th>
+                    {% else %}
+                        <th>
+                            <input  type="text"
+                                    class="{{ row.class |default('input-small') }} crud_form_field"
+                                    name="filter[{{ row.key }}][value]"
+                                    id="filter_{{ row.key }}"
+                                    value="{{ current_filter[row.key]['value'] | default('') }}"
+                            >
+                            <input  type="hidden"
+                                    name="filter[{{ row.key }}][operator]"
+                                    value="{{ row.filter_operator | default('=') }}"
+                            >
+                        </th>
+                    {% endif %}
+                {% else %}
+                    <th></th>
+                {% endif %}
+            {% endfor %}
+            {% if has_row_actions %}
+                <th></th>
+            {% endif %}
+        </tr>
+    </form>
+</thead>

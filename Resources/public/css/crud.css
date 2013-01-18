@@ -1,0 +1,41 @@
+div.dataTables_paginate {
+    float: right;
+    margin: 0;
+}
+
+table .filter input, table .filter select {
+    font-size:10px;
+    height: 15px;
+}
+
+table .filter select {
+    font-size:10px;
+    height: 25px;
+}
+
+.pagination .page_link {
+    cursor: pointer;
+}
+
+#crud_table a {
+    cursor: pointer;
+}
+
+#crud_table form {
+    margin: 0;
+}
+
+#crud_table .header_row {
+    background: #1b1b1b;
+    color: #fff;
+    bor
+}
+
+#crud_table .header_row a {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.input-micro {
+    width: 60px;
+}

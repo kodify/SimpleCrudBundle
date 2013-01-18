@@ -1,0 +1,32 @@
+<tr>
+    {% set counter = 0 %}
+    {% for key,value in row %}
+        {% if key in sorted_row_indexes %}
+            <td>
+                {% if table_header[counter] is defined and table_header[counter]['type'] is defined %}
+                    {% if table_header[counter]['type'] == 'boolean'  %}
+                        <i class="icon-{{ value ? 'ok' : 'remove' }}"></i>
+                    {% elseif table_header[counter]['type'] == 'datetime'  %}
+                        {{ value|date("h:m:i m/d/Y") }}
+                    {% elseif table_header[counter]['type'] == 'options'  %}
+                        {{ table_header[counter]['options'][value] }}
+                    {% endif %}
+                {% elseif table_header[counter] is defined and table_header[counter]['customRowRenderer'] is defined %}
+                    {% include table_header[counter]['customRowRenderer'] with {'value': value} %}
+                {% else %}
+                   {{ value }}
+                {% endif %}
+            </td>
+            {% set counter = counter + 1 %}
+        {% endif %}
+    {% endfor %}
+    {% if has_row_actions %}
+        <td>
+            {% for key, action_row in table_row_actions %}
+                <a id="{{ key }}_{{ row[index_key] }}" href="{{ path(action_row.url, {'id' : row[index_key]}) }}" class="">
+                    <i class="icon-{{ action_row.ico }}"></i>
+                </a>
+            {% endfor %}
+        </td>
+    {% endif %}
+</tr>
