@@ -154,7 +154,9 @@ abstract class AbstractCrudController extends Controller
             'paginator_page' => $paginator,
             'paginator_next' => $this->getPaginatorNext(),
             'paginator_prev' => $this->getPaginatorPrev(),
-            'page_sizes' => $this->getPageSizes()
+            'page_sizes' => $this->getPageSizes(),
+            'customRowClassRenderer' => $this->getCustomRowClassRenderer(),
+            'customActionButtonRenderer' => $this->getCustomActionButtonRenderer(),
         );
     }
 
@@ -318,6 +320,17 @@ abstract class AbstractCrudController extends Controller
     protected function getDefaultSort()
     {
 
+    }
+
+    protected function getCustomActionButtonRenderer(){
+
+        return 'KodifySimpleCrudBundle:CRUD:list_action.html.twig';
+    }
+
+    protected function getCustomRowClassRenderer()
+    {
+
+        return '';
     }
 
     protected function getSort()

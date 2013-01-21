@@ -1,4 +1,9 @@
-<tr>
+{% if customRowClassRenderer is defined and customRowClassRenderer != '' %}
+    <tr class="{% include customRowClassRenderer with {'row': row} %}">
+{% else %}
+    <tr>
+{% endif %}
+
     {% set counter = 0 %}
     {% for key,value in row %}
         {% if key in sorted_row_indexes %}
@@ -11,8 +16,8 @@
                     {% elseif table_header[counter]['type'] == 'options'  %}
                         {{ table_header[counter]['options'][value] }}
                     {% endif %}
-                {% elseif table_header[counter] is defined and table_header[counter]['customRowRenderer'] is defined %}
-                    {% include table_header[counter]['customRowRenderer'] with {'value': value} %}
+                {% elseif table_header[counter] is defined and table_header[counter]['customCellRenderer'] is defined %}
+                    {% include table_header[counter]['customCellRenderer'] with {'value': value} %}
                 {% else %}
                    {{ value }}
                 {% endif %}
@@ -23,9 +28,7 @@
     {% if has_row_actions %}
         <td>
             {% for key, action_row in table_row_actions %}
-                <a id="{{ key }}_{{ row[index_key] }}" href="{{ path(action_row.url, {'id' : row[index_key]}) }}" class="">
-                    <i class="icon-{{ action_row.ico }}"></i>
-                </a>
+                {% include customActionButtonRenderer with {'key': key, 'action_row': action_row, 'index_key': index_key} %}
             {% endfor %}
         </td>
     {% endif %}
