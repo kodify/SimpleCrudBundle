@@ -155,8 +155,8 @@ abstract class AbstractCrudController extends Controller
             'paginator_next' => $this->getPaginatorNext(),
             'paginator_prev' => $this->getPaginatorPrev(),
             'page_sizes' => $this->getPageSizes(),
-            'customRowClassRenderer' => $this->getCustomRowClassRenderer(),
-            'customActionButtonRenderer' => $this->getCustomActionButtonRenderer(),
+            'custom_row_class_renderer' => $this->getcustom_row_class_renderer(),
+            'custom_action_button_renderer' => $this->getcustom_action_button_renderer(),
         );
     }
 
@@ -322,12 +322,12 @@ abstract class AbstractCrudController extends Controller
 
     }
 
-    protected function getCustomActionButtonRenderer(){
+    protected function getcustom_action_button_renderer(){
 
         return 'KodifySimpleCrudBundle:CRUD:list_action.html.twig';
     }
 
-    protected function getCustomRowClassRenderer()
+    protected function getcustom_row_class_renderer()
     {
 
         return '';
