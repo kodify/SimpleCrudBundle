@@ -1,5 +1,5 @@
-{% if customRowClassRenderer is defined and customRowClassRenderer != '' %}
-    <tr class="{% include customRowClassRenderer with {'row': row} %}">
+{% if custom_row_class_renderer is defined and custom_row_class_renderer != '' %}
+    <tr class="{% include custom_row_class_renderer with {'row': row} %}">
 {% else %}
     <tr>
 {% endif %}
@@ -28,7 +28,7 @@
     {% if has_row_actions %}
         <td>
             {% for key, action_row in table_row_actions %}
-                {% include customActionButtonRenderer with {'key': key, 'action_row': action_row, 'index_key': index_key} %}
+                {% include custom_action_button_renderer with {'key': key, 'action_row': action_row, 'index_key': index_key} %}
             {% endfor %}
         </td>
     {% endif %}
