@@ -24,6 +24,37 @@ TODO:
 * remove $this->indexKey attribute and get from Doctrine Entity
 
 
+Installation
+------------
+### Composer:
+
+Add the following dependencies to your projects composer.json file:
+
+      "require": {
+          "kodify/simplecrudbundle": "dev-master"
+      }
+
+## deps file
+
+    [SimpleCrudBundle]
+        git=https://github.com/kodify/SimpleCrudBundle.git
+        version=origin/master
+
+## AppKernel.php
+
+Add the SimpleCrudBundle to your application's kernel:
+
+    public function registerBundles()
+    {
+        $bundles = array(
+            ...
+            new Kodify\SimpleCrudBundle\KodifySimpleCrudBundle(),
+            ...
+        );
+        ...
+    }
+
+
 Examples:
 ================
 
@@ -31,7 +62,7 @@ Controller
 -------------------------------------------
 
     /**
-     * Example class
+     * Example class.
      */
 
     namespace Kodify\AcmeBundle\Controller;
@@ -188,12 +219,3 @@ Screenshot
 
 
 
-Installation
-------------
-### Composer:
-
-Add the following dependencies to your projects composer.json file:
-
-      "require": {
-          "kodify/simplecrudbundle": "dev-master"
-      }
