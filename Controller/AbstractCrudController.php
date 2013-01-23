@@ -58,7 +58,7 @@ abstract class AbstractCrudController extends Controller
                 'form' => $form->createView(),
                 'new_object' => ($obj->getId() == null),
                 'page_title' => $form->getName(),
-                'form_destination' => 'add_' . $this->controllerName
+                'form_destination' => 'post_add_' . $this->controllerName
             )
         );
     }
