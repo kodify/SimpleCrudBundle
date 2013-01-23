@@ -1,5 +1,5 @@
 <thead>
-    <form method="POST" id="crud_filter_form">
+    <form method="POST" id="crud_filter_form" action="{{ path(app.request.attributes.get('_route')) }}">
         <tr class="header_row">
             {% for row in table_header %}
                 <th>
