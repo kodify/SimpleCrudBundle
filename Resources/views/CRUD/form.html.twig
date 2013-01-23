@@ -4,7 +4,7 @@
     <h1>{{ page_title }}</h1>
     <div class="well">
         {% include "KodifySimpleCrudBundle:CRUD:message_alert.html.twig" %}
-        <form action="{{ path(form_destination) }}" method="post" {{ form_enctype(form) }} novalidate>
+        <form id="crud_form" action="{{ path(form_destination) }}" method="post" {{ form_enctype(form) }} novalidate>
             {{ form_widget(form) }}
             <p>
                 <button class="btn btn-primary" type="submit">{% if new_object %}Create{% else %}Save{% endif %}</button>
