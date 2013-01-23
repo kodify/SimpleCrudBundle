@@ -50,6 +50,10 @@ abstract class AbstractCrudController extends Controller
                 $this->get('session')->setFlash('error', 'Error saving ' . $formClass->getName());
             }
         }
+        
+        if (null == $destinationUrl) {
+            $destinationUrl = 'post_add_' . $this->controllerName;
+        }
 
         return $this->render(
             $this->formLayout,
@@ -58,7 +62,7 @@ abstract class AbstractCrudController extends Controller
                 'form' => $form->createView(),
                 'new_object' => ($obj->getId() == null),
                 'page_title' => $form->getName(),
-                'form_destination' => 'post_add_' . $this->controllerName
+                'form_destination' => $destinationUrl,
             )
         );
     }
