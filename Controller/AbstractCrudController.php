@@ -29,7 +29,7 @@ abstract class AbstractCrudController extends Controller
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function addAction(Request $request)
+    public function addAction(Request $request, $destinationUrl = null)
     {
         $formClass = $this->getEntityForm();        
         $obj = $this->getEntityFromRequest($formClass);
