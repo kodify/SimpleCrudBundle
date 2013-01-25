@@ -9,7 +9,7 @@
         {% if app.session.hasFlash('success') %}
             <div class="alert alert-block alert-success">
                  <a class="close" data-dismiss="alert" href="#">X</a>
-                <strong>Info:</strong> {{ app.session.flash('success') }}
+                <strong>Success:</strong> {{ app.session.flash('success') }}
             </div>
         {% endif %}
         {% if app.session.hasFlash('info') %}
