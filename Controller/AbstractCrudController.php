@@ -39,6 +39,8 @@ abstract class AbstractCrudController extends Controller
             $form->bind($request);
 
             if ($form->isValid()) {
+
+                $this->prePersist($obj);
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($obj);
                 $em->flush();
@@ -385,5 +387,10 @@ abstract class AbstractCrudController extends Controller
         return $repo->getTotalRows(
             $this->getUsedFilterFields()
         );
+    }
+
+    protected function prePersist($obj)
+    {
+
     }
 }
