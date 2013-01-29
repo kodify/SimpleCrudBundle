@@ -357,11 +357,13 @@ class CrudControllerTest extends TestBaseClass
         $mockRequest = M::mock('Symfony\Component\HttpFoundation\Request[isMethod]');
         $mockRequest->shouldReceive('isMethod')->once()->andReturn(false);
 
-        $mockForm = M::mock('Symfony\Component\Form\Form[createView]');
-        $mockForm->shouldReceive('createView')->once()->andReturn('view');        
+        $mockForm = M::mock('Symfony\Component\Form\Form[createView,getName]')
+            ->shouldReceive('createView')->once()->andReturn('view')
+            ->shouldReceive('getName')->times(1)->andReturn('forn name')
+            ->getMock();
 
         $mockEntity = M::mock()
-            ->shouldReceive('getName')->once()->andReturn('entity name')
+            ->shouldReceive('getName')->times(0)->andReturn('entity name')
             ->shouldReceive('getId')->once()->andReturn(1)
             ->getMock();
 
@@ -385,13 +387,15 @@ class CrudControllerTest extends TestBaseClass
         $mockRequest = M::mock('Symfony\Component\HttpFoundation\Request[isMethod]');
         $mockRequest->shouldReceive('isMethod')->once()->andReturn(true);
 
-        $mockForm = M::mock('Symfony\Component\Form\Form[createView,bind,isValid]');
-        $mockForm->shouldReceive('createView')->once()->andReturn('view');        
-        $mockForm->shouldReceive('isValid')->once()->andReturn(false);        
-        $mockForm->shouldReceive('bind')->once()->with($mockRequest);        
+        $mockForm = M::mock('Symfony\Component\Form\Form[getName,createView,bind,isValid]')
+            ->shouldReceive('createView')->once()->andReturn('view')
+            ->shouldReceive('isValid')->once()->andReturn(false)
+            ->shouldReceive('bind')->once()->with($mockRequest)
+            ->shouldReceive('getName')->once()->andReturn('form name')
+            ->getMock();
 
         $mockEntity = M::mock()
-            ->shouldReceive('getName')->once()->andReturn('entity name')
+            ->shouldReceive('getName')->times(0)->andReturn('entity name')
             ->shouldReceive('getId')->once()->andReturn(1)
             ->getMock();
 
