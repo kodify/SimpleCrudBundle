@@ -15,6 +15,10 @@
                         {{ value|date("h:m:i m/d/Y") }}
                     {% elseif table_header[counter]['type'] == 'options'  %}
                         {{ table_header[counter]['options'][value] }}
+                    {% elseif table_header[counter]['type'] == 'array'  %}
+                       {% for array_value in value %}
+                           {{ array_value[table_header[counter]['array_key']] }}
+                       {% endfor %}
                     {% endif %}
                 {% elseif table_header[counter] is defined and table_header[counter]['custom_cell_renderer'] is defined %}
                     {% include table_header[counter]['custom_cell_renderer'] with {'value': value} %}
