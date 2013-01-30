@@ -41,9 +41,7 @@ abstract class AbstractCrudController extends Controller
             if ($form->isValid()) {
 
                 $this->prePersist($obj);
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($obj);
-                $em->flush();
+                $this->persist($obj);
 
                 $this->get('session')->setFlash('success', $formClass->getName() . ' updated successfully');
 
@@ -67,6 +65,16 @@ abstract class AbstractCrudController extends Controller
                 'form_destination' => $destinationUrl,
             )
         );
+    }
+
+    /**
+     * @param $obj
+     */
+    protected function persist($obj)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($obj);
+        $em->flush();
     }
 
     public function getEntityFromRequest($formClass)
