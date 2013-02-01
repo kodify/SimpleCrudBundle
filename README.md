@@ -138,7 +138,7 @@ Controller
                     'filterable' => true,
                     'key' => 'originalName',
                     'filter_operator' => 'RIGHT_LIKE', // LEFT_LIKE '%term', FULL_LIKE '%term%', RIGHT_LIKE 'term%', IN, NOT IN, =, !=, >=... by default =
-                    'customRowRenderer' => 'AcmeBundle:Comment/Crud:row_original_filename_renderer.html.twig' //Custom cell renderer
+                    'custom_cell_renderer' => 'AcmeBundle:Comment/Crud:row_original_filename_renderer.html.twig' //Custom cell renderer
                 ),
                 array(
                     'label' => 'Status',
