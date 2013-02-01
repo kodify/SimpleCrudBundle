@@ -39,13 +39,14 @@ abstract class AbstractCrudController extends Controller
             $form->bind($request);
 
             if ($form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($obj);
-                $em->flush();
+
+                $this->prePersist($obj);
+                $this->persist($obj);
+                $this->postPersist($obj);
 
                 $this->get('session')->setFlash('success', $formClass->getName() . ' updated successfully');
 
-                return $this->redirect($this->generateUrl('get_' . $this->controllerName));
+                return $this->redirect($this->postAddRedirectTo());
             } else {
                 $this->get('session')->setFlash('error', 'Error saving ' . $formClass->getName());
             }
@@ -58,13 +59,23 @@ abstract class AbstractCrudController extends Controller
         return $this->render(
             $this->formLayout,
             array(
-                'cancel_url' => $this->generateUrl('get_' . $this->controllerName),
+                'cancel_url' => $this->postAddRedirectTo(),
                 'form' => $form->createView(),
                 'new_object' => ($obj->getId() == null),
                 'page_title' => $form->getName(),
                 'form_destination' => $destinationUrl,
             )
         );
+    }
+
+    /**
+     * @param $obj
+     */
+    protected function persist($obj)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($obj);
+        $em->flush();
     }
 
     public function getEntityFromRequest($formClass)
@@ -385,5 +396,20 @@ abstract class AbstractCrudController extends Controller
         return $repo->getTotalRows(
             $this->getUsedFilterFields()
         );
+    }
+
+    protected function prePersist($obj)
+    {
+
+    }
+
+    protected function postPersist($obj)
+    {
+
+    }
+
+    protected function postAddRedirectTo()
+    {
+        return $this->generateUrl('get_' . $this->controllerName);
     }
 }
