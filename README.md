@@ -14,6 +14,7 @@ Functionalities:
     * Filter
     * Pagination
     * Customizable cell view
+    * Join with related entities
 * add/edit action from a given Form
 
 TODO:
