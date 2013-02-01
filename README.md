@@ -34,7 +34,7 @@ Add the following dependencies to your projects composer.json file:
           "kodify/simplecrudbundle": "dev-master"
       }
 
-## deps file
+### deps file
 
     [SimpleCrudBundle]
         git=https://github.com/kodify/SimpleCrudBundle.git
