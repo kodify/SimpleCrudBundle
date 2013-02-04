@@ -12,7 +12,13 @@
         <form id="crud_form" action="{{ path(form_destination, form_parameters) }}" method="post" {{ form_enctype(form) }} novalidate>
             {{ form_widget(form) }}
             <p>
-                <button class="btn btn-primary" type="submit">{% if new_object %}Create{% else %}Save{% endif %}</button>
+                <button class="btn btn-primary" type="submit">
+                    {% if submit_literal is defined %}
+                        {{ submit_literal }}
+                    {% else %}
+                        {% if new_object %}Create{% else %}Save{% endif %}
+                    {% endif %}
+                </button>
                 <button class="btn btn-danger" type="button" id="cancel_button">Cancel</button>
             </p>
         </form>
