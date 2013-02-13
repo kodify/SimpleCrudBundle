@@ -31,7 +31,7 @@ abstract class AbstractCrudController extends Controller
      */
     public function addAction(Request $request, $destinationUrl = null)
     {
-        $formClass = $this->getEntityForm();        
+        $formClass = $this->getEntityForm();
         $obj = $this->getEntityFromRequest($formClass);
         $form = $this->createForm($formClass, $obj);
 
@@ -51,7 +51,7 @@ abstract class AbstractCrudController extends Controller
                 $this->get('session')->setFlash('error', 'Error saving ' . $formClass->getName());
             }
         }
-        
+
         if (null == $destinationUrl) {
             $destinationUrl = 'post_add_' . $this->controllerName;
         }
@@ -82,17 +82,17 @@ abstract class AbstractCrudController extends Controller
     {
         $request = $this->get('request');
 
-        $obj_id = null;
+        $objId = null;
         if ($request->get('id')) {
-            $obj_id = $request->get('id');
+            $objId = $request->get('id');
         } else if ($request->isMethod('POST')) {
             $formData = $request->get($formClass->getName());
-            $obj_id = $formData['id'];
+            $objId = $formData['id'];
         }
 
-        if (!empty($obj_id)) {
+        if (!empty($objId)) {
             $em = $this->getDoctrine()->getManager();
-            $obj = $em->getRepository($this->entityClass)->findOneById($obj_id);
+            $obj = $em->getRepository($this->entityClass)->findOneById($objId);
         } else {
             $obj = new $this->entityClass;
         }
@@ -105,8 +105,8 @@ abstract class AbstractCrudController extends Controller
         return new $this->formClassName;
     }
 
-    /** 
-     * @codeCoverageIgnore 
+    /**
+     * @codeCoverageIgnore
      * @return Response A Response instance
      */
     public function renderTable()
@@ -138,11 +138,11 @@ abstract class AbstractCrudController extends Controller
         );
 
         $sort = $this->getSort();
-        $current_sort_field = '';
-        $current_sort_direction = '';
+        $currentSortField = '';
+        $currentSortDirection = '';
         if (!empty($sort)) {
-            $current_sort_field = key($sort);
-            $current_sort_direction = $sort[$current_sort_field]['direction'];
+            $currentSortField = key($sort);
+            $currentSortDirection = $sort[$currentSortField]['direction'];
         }
 
         return array(
@@ -158,8 +158,8 @@ abstract class AbstractCrudController extends Controller
             'add_action_url' => $this->getAddActionUrl($this->addAction, $this->controllerName),
             'current_filter' => $this->getUsedFilterFields(),
             'current_sort' => $this->getSort(),
-            'current_sort_field' => $current_sort_field,
-            'current_sort_direction' => $current_sort_direction,
+            'current_sort_field' => $currentSortField,
+            'current_sort_direction' => $currentSortDirection,
             'current_page_size' => $this->getPageSize(),
             'current_page' => $this->getCurrentPage(),
             'total_rows' => $totalRows,
@@ -180,7 +180,7 @@ abstract class AbstractCrudController extends Controller
         $addActionUrl = null;
 
         if ($addAction) {
-            $addRouteName = 'add_'.$controllerName;
+            $addRouteName = 'add_' . $controllerName;
             $addActionUrl = $this->container->get('router')->generate($addRouteName);
         }
 
@@ -253,7 +253,7 @@ abstract class AbstractCrudController extends Controller
                 }
             }
 
-            $route = $action.'_'.$controllerName;
+            $route = $action . '_' . $controllerName;
             $rowActions[$action] = array(
                 'ico' => $ico,
                 'label' => $label,
@@ -272,12 +272,14 @@ abstract class AbstractCrudController extends Controller
     protected function getPaginatorPrev()
     {
         $priorPage = $this->getCurrentPage() - 1;
+
         return $priorPage;
     }
 
     protected function getPaginatorNext()
     {
         $priorPage = $this->getCurrentPage() + 1;
+
         return $priorPage;
     }
 
@@ -337,7 +339,8 @@ abstract class AbstractCrudController extends Controller
 
     }
 
-    protected function getcustom_action_button_renderer(){
+    protected function getcustom_action_button_renderer()
+    {
 
         return 'KodifySimpleCrudBundle:CRUD:list_action.html.twig';
     }
@@ -373,12 +376,13 @@ abstract class AbstractCrudController extends Controller
         return $post;
     }
 
-    /** 
-     * @codeCoverageIgnore 
+    /**
+     * @codeCoverageIgnore
      */
     public function getData()
     {
         $repo = $this->getDoctrine()->getManager()->getRepository($this->entityClass);
+
         return $repo->getRows(
             $this->getUsedFilterFields(),
             $this->getPageSize(),
@@ -387,12 +391,13 @@ abstract class AbstractCrudController extends Controller
         );
     }
 
-    /** 
-     * @codeCoverageIgnore 
+    /**
+     * @codeCoverageIgnore
      */
     public function getTotalRows()
     {
         $repo = $this->getDoctrine()->getManager()->getRepository($this->entityClass);
+
         return $repo->getTotalRows(
             $this->getUsedFilterFields()
         );

@@ -20,15 +20,15 @@ use Doctrine\ORM\Mapping\ClassMetadata;
  */
 class CrudRepository extends TestBaseClass
 {
-	private function callControllerMethod($methodName, $params = array(), $changeProtectedAttributes = array())
+    private function callControllerMethod($methodName, $params = array(), $changeProtectedAttributes = array())
     {
         $foo = self::getMethod('Kodify\SimpleCrudBundle\Repository\AbstractCrudRepository', $methodName);
         $obj = $this->getMockForAbstractClass(
-        	'Kodify\SimpleCrudBundle\Repository\AbstractCrudRepository',
-        	array(
-        		$this->em,
-        		new ClassMetadata('Test')
-        	)
+            'Kodify\SimpleCrudBundle\Repository\AbstractCrudRepository',
+            array(
+                $this->em,
+                new ClassMetadata('Test')
+            )
         );
 
         if (is_array($changeProtectedAttributes) && !empty($changeProtectedAttributes)) {
@@ -60,27 +60,27 @@ class CrudRepository extends TestBaseClass
         $this->assertEquals($expectedResponse, $response);
     }
 
-	public function testGetQuery()
+    public function testGetQuery()
     {
         $result = $this->callControllerMethod(
             'getQuery',
             array(
-	        	array(
-	        		'f1', 'f2', 'f3', 'f4', 'f5'
-	        	),
-	        	55,
-	        	2,
-	        	array(
-	        		array(
-	        			'field' => 'f1',
-	        			'direction' => 'ASC'
-	        		)
-	        	),
-	        	array(
-	        		'f2' => 'DESC',
-	        		'f3' => 'ASC',
-	        		'f4' => 'ASC'
-	        	)
+                array(
+                    'f1', 'f2', 'f3', 'f4', 'f5'
+                ),
+                55,
+                2,
+                array(
+                    array(
+                        'field' => 'f1',
+                        'direction' => 'ASC'
+                    )
+                ),
+                array(
+                    'f2' => 'DESC',
+                    'f3' => 'ASC',
+                    'f4' => 'ASC'
+                )
             )
         );
 
@@ -92,9 +92,9 @@ class CrudRepository extends TestBaseClass
         $this->assertEquals(count($orderBy), 4);
 
         $orderPos0 = $orderBy[0]->getParts();
-		$this->assertEquals($orderPos0[0], 'p.f1 ASC');
-		$orderPos1 = $orderBy[1]->getParts();
-		$this->assertEquals($orderPos1[0], 'p.f2 DESC');
+        $this->assertEquals($orderPos0[0], 'p.f1 ASC');
+        $orderPos1 = $orderBy[1]->getParts();
+        $this->assertEquals($orderPos1[0], 'p.f2 DESC');
 
         $this->assertEquals($result->getFirstResult(), 55 * 2);
         $this->assertEquals($result->getMaxResults(), 55);
@@ -102,17 +102,17 @@ class CrudRepository extends TestBaseClass
 
     public function testGetQueryWithOperator()
     {
-         $result = $this->callControllerMethod(
-             'getQuery',
-             array(
-                 array(
-                     'id' => array(
-                         'operator' => '!=',
-                         'value' => '10',
-                     )
-                 )
-             )
-         );
+        $result = $this->callControllerMethod(
+            'getQuery',
+            array(
+                array(
+                    'id' => array(
+                        'operator' => '!=',
+                        'value' => '10',
+                    )
+                )
+            )
+        );
 
         $where = $result->getDQLPart('where')->getParts();
         $this->assertEquals(count($where), 1);
