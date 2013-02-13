@@ -13,12 +13,14 @@ abstract class AbstractCrudRepository extends EntityRepository
     public function getRows($filters = array(), $pageSize = 25, $currentPage = 0, $sort = null, $defaultSort = null)
     {
         $query = $this->getQuery($filters, $pageSize, $currentPage, $sort, $defaultSort);
+
         return $query->getQuery()->getArrayResult();
     }
 
     public function getTotalRows($filters = array(), $pageSize = 25, $currentPage = 0)
     {
         $paginator = new Paginator($this->getQuery($filters, $pageSize, $currentPage));
+
         return count($paginator);
     }
 

@@ -22,7 +22,7 @@ class CrudControllerTest extends TestBaseClass
     private function callControllerMethod($methodName, $params = array(), $request = null, $obj = null)
     {
         $foo = self::getMethod('Kodify\SimpleCrudBundle\Controller\AbstractCrudController', $methodName);
-        if ($obj == null) { 
+        if ($obj == null) {
             $obj = $this->getMockForAbstractClass('Kodify\SimpleCrudBundle\Controller\AbstractCrudController');
         }
 
@@ -212,8 +212,8 @@ class CrudControllerTest extends TestBaseClass
         $this->assertTrue(is_array($result));
 
         foreach ($result as $action) {
-              $this->assertArrayHasKey('ico', $action);
-              $this->assertArrayHasKey('url', $action);
+            $this->assertArrayHasKey('ico', $action);
+            $this->assertArrayHasKey('url', $action);
         }
     }
 
@@ -293,6 +293,7 @@ class CrudControllerTest extends TestBaseClass
             array(array(false, ''), null)
         );
     }
+
     /**
      * @dataProvider getAddActionUrlDataProvider
      */
@@ -306,27 +307,27 @@ class CrudControllerTest extends TestBaseClass
     public function testGetTemplateParams()
     {
         $stub = $this->getMockBuilder('Kodify\SimpleCrudBundle\Controller\AbstractCrudController')
-                ->setMethods(
-                    array(
-                        'defineTableHeader',
-                        'getData',
-                        'getTotalRows',
-                        'getPageSize'
-                    )
+            ->setMethods(
+                array(
+                    'defineTableHeader',
+                    'getData',
+                    'getTotalRows',
+                    'getPageSize'
                 )
-                ->getMock();
+            )
+            ->getMock();
 
         $stub->expects($this->any())->method('defineTableHeader')
-             ->will($this->returnValue(array()));
+            ->will($this->returnValue(array()));
 
         $stub->expects($this->any())->method('getData')
-             ->will($this->returnValue(array()));
+            ->will($this->returnValue(array()));
 
         $stub->expects($this->any())->method('getTotalRows')
-             ->will($this->returnValue(100));
+            ->will($this->returnValue(100));
 
         $stub->expects($this->any())->method('getPageSize')
-             ->will($this->returnValue(10));
+            ->will($this->returnValue(10));
 
         $this->setRequest($stub);
 
@@ -340,7 +341,7 @@ class CrudControllerTest extends TestBaseClass
             'paginator_next', 'paginator_prev', 'page_sizes');
 
         foreach ($indexList as $index) {
-              $this->assertArrayHasKey($index, $result);
+            $this->assertArrayHasKey($index, $result);
         }
 
         $this->assertEquals($result['total_rows'], 100);
@@ -413,7 +414,7 @@ class CrudControllerTest extends TestBaseClass
         $controller->shouldReceive('render')->once();
         $controller->shouldReceive('getEntityFromRequest')->once()->andReturn($mockEntity);
         $controller->shouldReceive('get')->once()->andReturn($mockSession);
-        
+
         $controller->addAction($mockRequest);
 
         $this->assertTrue(true, 'If we arrive here everything was called in the correct order');
@@ -425,9 +426,9 @@ class CrudControllerTest extends TestBaseClass
         $mockRequest->shouldReceive('isMethod')->once()->andReturn(true);
 
         $mockForm = M::mock('Symfony\Component\Form\Form[createView,bind,isValid]');
-        $mockForm->shouldReceive('createView')->never()->andReturn('view');        
-        $mockForm->shouldReceive('isValid')->once()->andReturn(true);        
-        $mockForm->shouldReceive('bind')->once()->with($mockRequest);        
+        $mockForm->shouldReceive('createView')->never()->andReturn('view');
+        $mockForm->shouldReceive('isValid')->once()->andReturn(true);
+        $mockForm->shouldReceive('bind')->once()->with($mockRequest);
 
         $mockEntity = M::mock();
         $mockEntity->shouldReceive('getName')->never()->andReturn('entity name');
@@ -454,7 +455,7 @@ class CrudControllerTest extends TestBaseClass
         $controller->shouldReceive('getEntityFromRequest')->once()->andReturn($mockEntity);
         $controller->shouldReceive('get')->once()->andReturn($mockSession);
         $controller->shouldReceive('getDoctrine')->once()->andReturn($mockDoctrine);
-        
+
         $controller->addAction($mockRequest);
 
         $this->assertTrue(true, 'If we arrive here everything was called in the correct order');
@@ -489,7 +490,7 @@ class CrudControllerTest extends TestBaseClass
 
         $mockManager = M::mock();
         $mockManager->shouldReceive('getRepository')->once()->andReturn($mockEntityRepo);
-        
+
         $mockDoctrine = M::mock();
         $mockDoctrine->shouldReceive('getManager')->once()->andReturn($mockManager);
 
@@ -517,13 +518,15 @@ class CrudControllerTest extends TestBaseClass
 
         $mockManager = M::mock();
         $mockManager->shouldReceive('getRepository')->once()->andReturn($mockEntityRepo);
-        
+
         $mockDoctrine = M::mock();
         $mockDoctrine->shouldReceive('getManager')->once()->andReturn($mockManager);
 
         $returnGet = function ($tmp) {
-            if ($tmp != 'id')
+            if ($tmp != 'id') {
+
                 return $tmp;
+            }
         };
 
         $mockRequest = M::mock('Symfony\Component\HttpFoundation\Request[get,isMethod]');
@@ -544,8 +547,8 @@ class CrudControllerTest extends TestBaseClass
     public function testGetEntityForm()
     {
         $controller = M::mock('Kodify\SimpleCrudBundle\Controller\AbstractCrudController[]');
-        
-        $refl    = new \ReflectionObject($controller);
+
+        $refl = new \ReflectionObject($controller);
         $message = $refl->getProperty('formClassName');
         $message->setAccessible(true);
         $message->setValue($controller, 'stdClass');
