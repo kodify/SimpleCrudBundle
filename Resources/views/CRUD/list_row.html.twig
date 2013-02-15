@@ -1,7 +1,7 @@
 {% if custom_row_class_renderer is defined and custom_row_class_renderer != '' %}
-    <tr class="{% include custom_row_class_renderer with {'row': row} %}">
+    <tr id="row{{ row[index_key] }}" class="{% include custom_row_class_renderer with {'row': row} %}">
 {% else %}
-    <tr>
+    <tr id="row{{ row[index_key] }}">
 {% endif %}
 
     {% set counter = 0 %}
