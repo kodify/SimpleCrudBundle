@@ -1,11 +1,12 @@
 $(document).ready(function () {
+
     $('#crud_search_button').on("click", function () {
         $("#crud_form_current_page").val(0);
         $("#crud_filter_form").submit();
     });
 
     $('#crud_reset_button').on("click", function () {
-        window.location = window.location.href;
+        window.location = resetFormUrl;
     });
 
     $('#crud_page_size').on("change", function () {
@@ -42,4 +43,65 @@ $(document).ready(function () {
         $("#crud_filter_form").submit();
     });
 
+    $("a.ajax-action-button").live("click", (function(event) {
+        event.preventDefault();
+
+        var img = $('<img>');
+        img.attr('src', ajaxLoadingImgUrl);
+
+        $('<div/>')
+            .append(img)
+            .appendTo($(this).parent());
+
+        $(this).hide();
+        var currentLink = $(this);
+
+        $.ajax({
+            url: $(this).attr("href"),
+            type: 'GET',
+            cache: false,
+            success: function(response) {
+                img.hide();
+                currentLink.show();
+                if (currentLink.data('success-callback-function')) {
+                    var rowId = currentLink.data('row-id');
+                    window[currentLink.data('success-callback-function')](rowId, response, currentLink);
+                }
+
+            },
+            error: function(response) {
+                img.hide();
+                currentLink.show();
+                if (currentLink.data('error-callback-function')) {
+                    var rowId = currentLink.data('row-id');
+                    window[currentLink.data('error-callback-function')](rowId, response, currentLink);
+                }
+
+            }
+        });
+    }));
 });
+
+function displayErrorMessage(rowId, response, linkObject)
+{
+    $('<div style="margin-top:5px" class="alert alert-error" />')
+        .html('Error: status: ' + response.status + '<br />statusText: ' + response.statusText)
+        .appendTo(linkObject.parent());
+}
+
+function hideRow(rowId, response, linkObject)
+{
+    $("#row" + rowId).hide('slow');
+}
+
+function hideRowAndDisplayMessage(rowId, response, linkObject)
+{
+    hideRow(rowId, response, linkObject);
+
+    $('<div style="margin-top:5px" class="alert alert-info" />')
+        .html('Info: ' + response.message)
+        .delay(3000)
+        .fadeOut(300)
+        .prependTo(".container");
+
+}

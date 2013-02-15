@@ -41,4 +41,8 @@
         </tbody>
     </table>
     {% include "KodifySimpleCrudBundle:CRUD:list_paginator.html.twig" %}
+    <script>
+        var resetFormUrl = '{{ path(app.request.attributes.get('_route')) }}';
+        var ajaxLoadingImgUrl = '{{ asset('bundles/kodifysimplecrud/img/ajax-loader.gif') }}';
+    </script>
 {% endblock content %}
