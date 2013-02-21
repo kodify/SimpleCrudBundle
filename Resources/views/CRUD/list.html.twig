@@ -42,7 +42,7 @@
     </table>
     {% include "KodifySimpleCrudBundle:CRUD:list_paginator.html.twig" %}
     <script>
-        var resetFormUrl = '{{ path(app.request.attributes.get('_route')) }}';
+        var resetFormUrl = '{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}';
         var ajaxLoadingImgUrl = '{{ asset('bundles/kodifysimplecrud/img/ajax-loader.gif') }}';
     </script>
 {% endblock content %}
