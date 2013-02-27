@@ -32,8 +32,8 @@ abstract class AbstractCrudController extends Controller
     public function addAction(Request $request, $destinationUrl = null)
     {
         $formClass = $this->getEntityForm();
-        $obj = $this->getEntityFromRequest($formClass);
-        $form = $this->createForm($formClass, $obj);
+        $obj       = $this->getEntityFromRequest($formClass);
+        $form      = $this->createForm($formClass, $obj);
 
         if ($request->isMethod('POST')) {
             $form->bind($request);
@@ -59,10 +59,10 @@ abstract class AbstractCrudController extends Controller
         return $this->render(
             $this->formLayout,
             array(
-                'cancel_url' => $this->postAddRedirectTo(),
-                'form' => $form->createView(),
-                'new_object' => ($obj->getId() == null),
-                'page_title' => $form->getName(),
+                'cancel_url'       => $this->postAddRedirectTo(),
+                'form'             => $form->createView(),
+                'new_object'       => ($obj->getId() == null),
+                'page_title'       => $form->getName(),
                 'form_destination' => $destinationUrl,
             )
         );
@@ -87,11 +87,11 @@ abstract class AbstractCrudController extends Controller
             $objId = $request->get('id');
         } else if ($request->isMethod('POST')) {
             $formData = $request->get($formClass->getName());
-            $objId = $formData['id'];
+            $objId    = $formData['id'];
         }
 
         if (!empty($objId)) {
-            $em = $this->getDoctrine()->getManager();
+            $em  = $this->getDoctrine()->getManager();
             $obj = $em->getRepository($this->entityClass)->findOneById($objId);
         } else {
             $obj = new $this->entityClass;
@@ -119,9 +119,9 @@ abstract class AbstractCrudController extends Controller
 
     public function getTemplateParams()
     {
-        $tableHeader = $this->defineTableHeader();
-        $tableRows = $this->getData();
-        $totalRows = $this->getTotalRows();
+        $tableHeader   = $this->defineTableHeader();
+        $tableRows     = $this->getData();
+        $totalRows     = $this->getTotalRows();
         $sortedIndexes = $this->getHeaderIndexes($tableHeader);
 
         $tableRows = $this->sortTableRows($sortedIndexes, $tableRows);
@@ -129,7 +129,7 @@ abstract class AbstractCrudController extends Controller
         $rowActions = $this->getRowActions($this->actions, $this->controllerName);
 
         $strFrom = $this->getCurrentPage() * $this->getPageSize() + 1;
-        $strTo = $strFrom + $this->getPageSize() - 1;
+        $strTo   = $strFrom + $this->getPageSize() - 1;
 
         $paginator = $this->getPaginator(
             $totalRows,
@@ -137,40 +137,40 @@ abstract class AbstractCrudController extends Controller
             $this->getCurrentPage()
         );
 
-        $sort = $this->getSort();
-        $currentSortField = '';
+        $sort                 = $this->getSort();
+        $currentSortField     = '';
         $currentSortDirection = '';
         if (!empty($sort)) {
-            $currentSortField = key($sort);
+            $currentSortField     = key($sort);
             $currentSortDirection = $sort[$currentSortField]['direction'];
         }
 
         return array(
-            'page_header' => $this->pageTitle,
-            'index_key' => $this->indexKey,
-            'table_rows' => $tableRows,
-            'table_header' => $tableHeader,
-            'has_row_actions' => !empty($this->actions),
-            'table_row_actions' => $rowActions,
-            'sorted_row_indexes' => $sortedIndexes,
-            'searchable' => $this->hasSearchableFields($tableHeader),
-            'add_action' => $this->addAction,
-            'add_action_url' => $this->getAddActionUrl($this->addAction, $this->controllerName),
-            'current_filter' => $this->getUsedFilterFields(),
-            'current_sort' => $this->getSort(),
-            'current_sort_field' => $currentSortField,
-            'current_sort_direction' => $currentSortDirection,
-            'current_page_size' => $this->getPageSize(),
-            'current_page' => $this->getCurrentPage(),
-            'total_rows' => $totalRows,
-            'total_pages' => ceil($totalRows / $this->getPageSize()),
-            'str_from' => $strFrom,
-            'str_to' => min($strTo, $totalRows),
-            'paginator_page' => $paginator,
-            'paginator_next' => $this->getPaginatorNext(),
-            'paginator_prev' => $this->getPaginatorPrev(),
-            'page_sizes' => $this->getPageSizes(),
-            'custom_row_class_renderer' => $this->getcustom_row_class_renderer(),
+            'page_header'                   => $this->pageTitle,
+            'index_key'                     => $this->indexKey,
+            'table_rows'                    => $tableRows,
+            'table_header'                  => $tableHeader,
+            'has_row_actions'               => !empty($this->actions),
+            'table_row_actions'             => $rowActions,
+            'sorted_row_indexes'            => $sortedIndexes,
+            'searchable'                    => $this->hasSearchableFields($tableHeader),
+            'add_action'                    => $this->addAction,
+            'add_action_url'                => $this->getAddActionUrl($this->addAction, $this->controllerName),
+            'current_filter'                => $this->getUsedFilterFields(),
+            'current_sort'                  => $this->getSort(),
+            'current_sort_field'            => $currentSortField,
+            'current_sort_direction'        => $currentSortDirection,
+            'current_page_size'             => $this->getPageSize(),
+            'current_page'                  => $this->getCurrentPage(),
+            'total_rows'                    => $totalRows,
+            'total_pages'                   => ceil($totalRows / $this->getPageSize()),
+            'str_from'                      => $strFrom,
+            'str_to'                        => min($strTo, $totalRows),
+            'paginator_page'                => $paginator,
+            'paginator_next'                => $this->getPaginatorNext(),
+            'paginator_prev'                => $this->getPaginatorPrev(),
+            'page_sizes'                    => $this->getPageSizes(),
+            'custom_row_class_renderer'     => $this->getcustom_row_class_renderer(),
             'custom_action_button_renderer' => $this->getcustom_action_button_renderer(),
         );
     }
@@ -214,7 +214,7 @@ abstract class AbstractCrudController extends Controller
             $tmpRow = array();
             foreach ($sortedIndexes as $index) {
                 if (strpos($index, '.') > 0) {
-                    $fields = explode(".", $index);
+                    $fields         = explode(".", $index);
                     $tmpRow[$index] = $row[strtolower($fields[0])][$fields[1]];
                 } else {
                     $tmpRow[$index] = $row[$index];
@@ -232,12 +232,12 @@ abstract class AbstractCrudController extends Controller
         $rowActions = array();
 
         foreach ($actions as $action) {
-            $ico = null;
+            $ico   = null;
             $label = null;
 
             if (is_array($action)) {
-                $ico = (isset($action['ico']) ? $action['ico'] : '');
-                $label = (isset($action['label']) ? $action['label'] : '');
+                $ico    = (isset($action['ico']) ? $action['ico'] : '');
+                $label  = (isset($action['label']) ? $action['label'] : '');
                 $action = $action['route_name'];
             } else {
                 switch ($action) {
@@ -253,11 +253,11 @@ abstract class AbstractCrudController extends Controller
                 }
             }
 
-            $route = $action . '_' . $controllerName;
+            $route               = $action . '_' . $controllerName;
             $rowActions[$action] = array(
-                'ico' => $ico,
+                'ico'   => $ico,
                 'label' => $label,
-                'url' => $route
+                'url'   => $route
             );
         }
 
@@ -286,8 +286,8 @@ abstract class AbstractCrudController extends Controller
     protected function getPaginator($totalRows, $pageSize, $currentPage)
     {
         $linkPages = array();
-        $numPages = ceil($totalRows / $pageSize);
-        $total = 0;
+        $numPages  = ceil($totalRows / $pageSize);
+        $total     = 0;
 
         $init = $currentPage - 3;
         if ($init < 0) {
@@ -304,9 +304,9 @@ abstract class AbstractCrudController extends Controller
 
     protected function getPageSize()
     {
-        $form = $this->get('request')->get('form');
+        $form             = $this->get('request')->get('form');
         $defaultPageSizes = $this->getPageSizes();
-        $pageSize = $defaultPageSizes[0];
+        $pageSize         = $defaultPageSizes[0];
         if (isset($form['page_size'])) {
             $pageSize = $form['page_size'];
         }
@@ -316,7 +316,7 @@ abstract class AbstractCrudController extends Controller
 
     protected function getCurrentPage()
     {
-        $form = $this->get('request')->get('form');
+        $form        = $this->get('request')->get('form');
         $currentPage = 0;
         if (isset($form['current_page'])) {
             $currentPage = $form['current_page'];
@@ -359,7 +359,7 @@ abstract class AbstractCrudController extends Controller
             $default = $this->getDefaultSort();
             if (is_array($default)) {
                 foreach ($default as $key => $value) {
-                    $post[$key]['field'] = $key;
+                    $post[$key]['field']     = $key;
                     $post[$key]['direction'] = $value;
                 }
             }
@@ -367,9 +367,9 @@ abstract class AbstractCrudController extends Controller
             $tmp = array();
 
             if (is_array($post) && isset($post['field'])) {
-                $tmp[$post['field']]['field'] = $post['field'];
+                $tmp[$post['field']]['field']     = $post['field'];
                 $tmp[$post['field']]['direction'] = $post['dir'];
-                $post = $tmp;
+                $post                             = $tmp;
             }
         }
 
