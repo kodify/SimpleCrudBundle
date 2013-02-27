@@ -22,12 +22,15 @@ class CrudRepository extends TestBaseClass
 {
     private function callControllerMethod($methodName, $params = array(), $changeProtectedAttributes = array())
     {
+        $classMetadata =  new ClassMetadata('Test');
+        $classMetadata->setIdentifier(array('id'));
+
         $foo = self::getMethod('Kodify\SimpleCrudBundle\Repository\AbstractCrudRepository', $methodName);
         $obj = $this->getMockForAbstractClass(
             'Kodify\SimpleCrudBundle\Repository\AbstractCrudRepository',
             array(
                 $this->em,
-                new ClassMetadata('Test')
+                $classMetadata
             )
         );
 
@@ -213,60 +216,5 @@ class CrudRepository extends TestBaseClass
         }
     }
 
-    public function testGetQueryWithLeftJoin()
-    {
-        $leftJoin = array(
-            array('field' => 'p.video', 'alias' => 'Video'),
-            array('field' => 'p.test2', 'alias' => 'Test')
-        );
 
-        $result = $this->callControllerMethod(
-            'getQuery',
-            array(
-                array(
-                    'f1', 'f2', 'f3', 'f4', 'f5', 'v.id' => 'f6'
-                ),
-                55,
-                2,
-                array(
-                    array(
-                        'field' => 'v.f1',
-                        'direction' => 'ASC'
-                    )
-                ),
-                array(
-                    'f2' => 'DESC',
-                    'f3' => 'ASC',
-                    'f4' => 'ASC'
-                )
-            ),
-            array(
-                'selectEntities' => 'p, Video',
-                'selectLeftJoin' => $leftJoin
-            )
-        );
-
-        $orderBy = $result->getDQLPart('orderBy');
-
-        $this->assertTrue($result instanceof \Doctrine\ORM\QueryBuilder);
-
-        $join = $result->getDQLPart('join');
-        $this->assertEquals(count($join['p']), 2);
-        foreach ($join['p'] as $key => $j) {
-            $this->assertEquals($j->getJoinType(), 'LEFT');
-            $this->assertEquals($j->getJoin(), $leftJoin[$key]['field']);
-            $this->assertEquals($j->getAlias(), $leftJoin[$key]['alias']);
-        }
-
-        $this->assertEquals(count($result->getDQLPart('where')->getParts()), 6);
-        $this->assertEquals(count($orderBy), 4);
-
-        $orderPos0 = $orderBy[0]->getParts();
-        $this->assertEquals($orderPos0[0], 'v.f1 ASC');
-        $orderPos1 = $orderBy[1]->getParts();
-        $this->assertEquals($orderPos1[0], 'p.f2 DESC');
-
-        $this->assertEquals($result->getFirstResult(), 55 * 2);
-        $this->assertEquals($result->getMaxResults(), 55);
-    }
 }

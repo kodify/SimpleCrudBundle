@@ -17,7 +17,7 @@
                         {{ table_header[counter]['options'][value] }}
                     {% elseif table_header[counter]['type'] == 'array'  %}
                        {% for array_value in value %}
-                           {{ array_value[table_header[counter]['array_key']] }}
+                           {{ array_value[table_header[counter]['array_key']] }} <br>
                        {% endfor %}
                     {% endif %}
                 {% elseif table_header[counter] is defined and table_header[counter]['custom_cell_renderer'] is defined %}

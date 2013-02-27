@@ -114,7 +114,7 @@ class CrudControllerTest extends TestBaseClass
     public function testGetPaginatorMatch($data, $expectedData)
     {
         $result = $this->callControllerMethod('getPaginator', $data);
-        $diff = array_intersect($result, $expectedData);
+        $diff   = array_intersect($result, $expectedData);
         $this->assertTrue(count($diff) == count($expectedData));
     }
 
@@ -145,12 +145,14 @@ class CrudControllerTest extends TestBaseClass
 
     public function getPageSizeDataProvider()
     {
+        $result = $this->callControllerMethod('getPageSizes');
+
         return array(
             array(-1, -1),
             array(0, 0),
             array(1, 1),
             array(10, 10),
-            array(null, 25)
+            array(null, $result[0])
         );
     }
 
@@ -167,35 +169,35 @@ class CrudControllerTest extends TestBaseClass
 
     public function testGetSort()
     {
-        $form = array('sort' => 'test');
+        $form   = array('sort' => 'test');
         $result = $this->callControllerMethod('getSort', array(), $form);
         $this->assertEquals($result, 'test');
     }
 
     public function testGetSortWithPost()
     {
-        $form = array('sort' => array('field' => 'id', 'dir' => 'ASC'));
+        $form   = array('sort' => array('field' => 'id', 'dir' => 'ASC'));
         $result = $this->callControllerMethod('getSort', array(), $form);
         $this->assertEquals($result, array('id' => array('field' => 'id', 'direction' => 'ASC')));
     }
 
     public function testGetUsedFilterFields()
     {
-        $form = array('filter' => 'test');
+        $form   = array('filter' => 'test');
         $result = $this->callControllerMethod('getUsedFilterFields', array(), $form);
         $this->assertEquals($result, 'test');
     }
 
     public function testGetPaginatorNext()
     {
-        $form = array('form' => array('current_page' => 1));
+        $form   = array('form' => array('current_page' => 1));
         $result = $this->callControllerMethod('getPaginatorNext', array(), $form);
         $this->assertEquals($result, 2);
     }
 
     public function testGetPaginatorPrev()
     {
-        $form = array('form' => array('current_page' => 1));
+        $form   = array('form' => array('current_page' => 1));
         $result = $this->callControllerMethod('getPaginatorPrev', array(), $form);
         $this->assertEquals($result, 0);
     }
@@ -224,8 +226,8 @@ class CrudControllerTest extends TestBaseClass
             array(
                 array(
                     array(
-                        'ico' => 'testIco',
-                        'label' => 'testLabel',
+                        'ico'        => 'testIco',
+                        'label'      => 'testLabel',
                         'route_name' => 'testRoute'
                     )
                 ),
@@ -276,7 +278,7 @@ class CrudControllerTest extends TestBaseClass
             ),
             array(
                 'tmp2' => 'value1',
-                'key' => 'value2'
+                'key'  => 'value2'
             )
         );
 
@@ -308,13 +310,13 @@ class CrudControllerTest extends TestBaseClass
     {
         $stub = $this->getMockBuilder('Kodify\SimpleCrudBundle\Controller\AbstractCrudController')
             ->setMethods(
-                array(
-                    'defineTableHeader',
-                    'getData',
-                    'getTotalRows',
-                    'getPageSize'
-                )
+            array(
+                'defineTableHeader',
+                'getData',
+                'getTotalRows',
+                'getPageSize'
             )
+        )
             ->getMock();
 
         $stub->expects($this->any())->method('defineTableHeader')
@@ -370,7 +372,7 @@ class CrudControllerTest extends TestBaseClass
 
         $mockFormObject = M::mock();
 
-        $methods = 'getEntityForm,getEntityFromRequest,createForm,generateUrl,render';
+        $methods    = 'getEntityForm,getEntityFromRequest,createForm,generateUrl,render';
         $controller = M::mock('Kodify\SimpleCrudBundle\Controller\AbstractCrudController[' . $methods . ']');
         $controller->shouldReceive('getEntityForm')->once();
         $controller->shouldReceive('createForm')->andReturn($mockForm);
@@ -406,7 +408,7 @@ class CrudControllerTest extends TestBaseClass
         $mockFormObject = M::mock();
         $mockFormObject->shouldReceive('getName')->once()->andReturn('test');
 
-        $methods = 'getEntityForm,getEntityFromRequest,createForm,generateUrl,render,get';
+        $methods    = 'getEntityForm,getEntityFromRequest,createForm,generateUrl,render,get';
         $controller = M::mock('Kodify\SimpleCrudBundle\Controller\AbstractCrudController[' . $methods . ']');
         $controller->shouldReceive('getEntityForm')->once()->andReturn($mockFormObject);
         $controller->shouldReceive('createForm')->andReturn($mockForm);
@@ -446,7 +448,7 @@ class CrudControllerTest extends TestBaseClass
         $mockDoctrine = M::mock();
         $mockDoctrine->shouldReceive('getManager')->once()->andReturn($mockManager);
 
-        $methods = 'getEntityForm,getEntityFromRequest,createForm,generateUrl,render,get,getDoctrine';
+        $methods    = 'getEntityForm,getEntityFromRequest,createForm,generateUrl,render,get,getDoctrine';
         $controller = M::mock('Kodify\SimpleCrudBundle\Controller\AbstractCrudController[' . $methods . ']');
         $controller->shouldReceive('getEntityForm')->once()->andReturn($mockFormObject);
         $controller->shouldReceive('createForm')->andReturn($mockForm);
@@ -467,11 +469,11 @@ class CrudControllerTest extends TestBaseClass
         $mockRequest->shouldReceive('isMethod')->once()->andReturn(false);
         $mockRequest->shouldReceive('get')->once()->andReturn(null);
 
-        $methods = 'getDoctrine, get';
+        $methods    = 'getDoctrine, get';
         $controller = M::mock('Kodify\SimpleCrudBundle\Controller\AbstractCrudController[' . $methods . ']');
         $controller->shouldReceive('get')->once()->andReturn($mockRequest);
 
-        $refl = new \ReflectionObject($controller);
+        $refl    = new \ReflectionObject($controller);
         $message = $refl->getProperty('entityClass');
         $message->setAccessible(true);
         $message->setValue($controller, 'stdClass');
@@ -482,7 +484,7 @@ class CrudControllerTest extends TestBaseClass
 
     public function testGetEntityFromRequestWithId()
     {
-        $methods = 'getDoctrine,get';
+        $methods    = 'getDoctrine,get';
         $controller = M::mock('Kodify\SimpleCrudBundle\Controller\AbstractCrudController[' . $methods . ']');
 
         $mockEntityRepo = M::mock();
@@ -510,7 +512,7 @@ class CrudControllerTest extends TestBaseClass
 
     public function testGetEntityFromRequestWithFormId()
     {
-        $methods = 'getDoctrine,get';
+        $methods    = 'getDoctrine,get';
         $controller = M::mock('Kodify\SimpleCrudBundle\Controller\AbstractCrudController[' . $methods . ']');
 
         $mockEntityRepo = M::mock();
@@ -548,7 +550,7 @@ class CrudControllerTest extends TestBaseClass
     {
         $controller = M::mock('Kodify\SimpleCrudBundle\Controller\AbstractCrudController[]');
 
-        $refl = new \ReflectionObject($controller);
+        $refl    = new \ReflectionObject($controller);
         $message = $refl->getProperty('formClassName');
         $message->setAccessible(true);
         $message->setValue($controller, 'stdClass');
