@@ -27,17 +27,42 @@ abstract class AbstractCrudRepository extends EntityRepository
     public function getQuery($filters = array(), $pageSize = 25, $currentPage = 0, $sort = null, $defaultSort = null)
     {
         $query = $this->createQueryBuilder('p')
-            ->select($this->selectEntities)
-            ->setMaxResults($pageSize)
-            ->setFirstResult($currentPage * $pageSize);
+            ->select($this->selectEntities);
 
         if (is_array($this->selectLeftJoin)) {
             foreach ($this->selectLeftJoin as $join) {
                 $query->leftJoin($join['field'], $join['alias']);
             }
+
+            $identifiers = ($this->getClassMetadata()->getIdentifier());
+
+            $queryToRetrieveIds = $this->createQueryBuilder('p')
+                ->select('p.' . $identifiers[0])
+                ->setMaxResults($pageSize)
+                ->setFirstResult($currentPage * $pageSize);
+
+            Parser\FilterParser::parseFilters($filters, $queryToRetrieveIds);
+            Parser\SortParser::parseSort($sort, $defaultSort, $queryToRetrieveIds);
+
+            $selectedEntities = $queryToRetrieveIds->getQuery()->expireQueryCache(true)->getArrayResult();
+            $ids = array();
+            foreach ($selectedEntities as $entity) {
+                $ids[] = $entity[$identifiers[0]];
+            }
+
+            if (empty($ids)) {
+                $query->andWhere('1 != 1');
+            } else {
+                $query->andWhere('p.' . $identifiers[0] . ' IN (:ids_list)')
+                    ->setParameter('ids_list', $ids);
+            }
+        } else {
+            $query->setMaxResults($pageSize)
+                ->setFirstResult($currentPage * $pageSize);
+
+            Parser\FilterParser::parseFilters($filters, $query);
         }
 
-        Parser\FilterParser::parseFilters($filters, $query);
         Parser\SortParser::parseSort($sort, $defaultSort, $query);
 
         return $query;

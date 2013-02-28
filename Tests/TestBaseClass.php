@@ -17,7 +17,8 @@ abstract class TestBaseClass extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->em = M::mock('\Doctrine\ORM\EntityManager[close]');
+        $this->em = M::mock('\Doctrine\ORM\EntityManager[close, getConfiguration]');
+        $this->em->shouldReceive('getConfiguration')->andReturn(new \Doctrine\ORM\Configuration());
     }
 
     public function tearDown()
