@@ -50,9 +50,12 @@ abstract class AbstractCrudRepository extends EntityRepository
                 $ids[] = $entity[$identifiers[0]];
             }
 
-            $query->andWhere('p.' . $identifiers[0] . ' IN (:ids_list)')
-                ->setParameter('ids_list', $ids);
-
+            if (empty($ids)) {
+                $query->andWhere('1 != 1');
+            } else {
+                $query->andWhere('p.' . $identifiers[0] . ' IN (:ids_list)')
+                    ->setParameter('ids_list', $ids);
+            }
         } else {
             $query->setMaxResults($pageSize)
                 ->setFirstResult($currentPage * $pageSize);
