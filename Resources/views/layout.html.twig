@@ -1,14 +1,14 @@
 {% extends '::base.html.twig' %}
 
 {% block head_style %}
-    {{ parent() }}
+    
     {% stylesheets output='css/*.css' filter='cssrewrite' debug=false
         'bundles/kodifysimplecrud/css/bootstrap.min.css'
         'bundles/kodifysimplecrud/css/crud.css'
     %}
         <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
     {% endstylesheets %}
-
+    {{ parent() }}
 {% endblock head_style %}
 
 {% block head_script %}
