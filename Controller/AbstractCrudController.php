@@ -40,13 +40,17 @@ abstract class AbstractCrudController extends Controller
 
             if ($form->isValid()) {
 
-                $this->prePersist($obj);
-                $this->persist($obj);
-                $this->postPersist($obj);
+                try {
+                    $this->prePersist($obj);
+                    $this->persist($obj);
+                    $this->postPersist($obj);
 
-                $this->get('session')->setFlash('success', $formClass->getName() . ' updated successfully');
+                    $this->get('session')->setFlash('success', $formClass->getName() . ' updated successfully');
 
-                return $this->redirect($this->postAddRedirectTo());
+                    return $this->redirect($this->postAddRedirectTo());
+                } catch (\Exception $e) {
+                    $this->get('session')->setFlash('error', 'Error saving ' . $formClass->getName());
+                }
             } else {
                 $this->get('session')->setFlash('error', 'Error saving ' . $formClass->getName());
             }
