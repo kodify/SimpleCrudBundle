@@ -12,7 +12,7 @@
                     {% if table_header[counter]['type'] == 'boolean'  %}
                         <i class="icon-{{ value ? 'ok' : 'remove' }}"></i>
                     {% elseif table_header[counter]['type'] == 'datetime'  %}
-                        {{ value|date("h:m:i m/d/Y") }}
+                        {{ value|date("m/d/Y") }}
                     {% elseif table_header[counter]['type'] == 'options'  %}
                         {{ table_header[counter]['options'][value] }}
                     {% elseif table_header[counter]['type'] == 'array'  %}
