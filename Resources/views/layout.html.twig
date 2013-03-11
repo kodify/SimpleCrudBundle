@@ -5,6 +5,7 @@
     {% stylesheets output='css/*.css' filter='cssrewrite' debug=false
         'bundles/kodifysimplecrud/css/bootstrap.min.css'
         'bundles/kodifysimplecrud/css/crud.css'
+        'bundles/kodifysimplecrud/css/datepicker.css'
     %}
         <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
     {% endstylesheets %}
@@ -16,6 +17,7 @@
         '@KodifySimpleCrudBundle/Resources/public/js/jquery-1.8.3.min.js'
         '@KodifySimpleCrudBundle/Resources/public/js/bootstrap.min.js'
         '@KodifySimpleCrudBundle/Resources/public/js/crud.js'
+        '@KodifySimpleCrudBundle/Resources/public/js/bootstrap-datepicker.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

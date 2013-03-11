@@ -80,6 +80,25 @@ $(document).ready(function () {
             }
         });
     }));
+
+
+    $('.datepicker').datepicker().on('show',function(){
+        var current = this;
+        $('.datepicker').each(function(){
+            if(this != current){
+                $(this).datepicker('hide');
+            }
+        });
+    });
+    $('.datepicker').on('unfocus',function(){
+        $(this).datepicker('hide');
+    });
+    $('select , input').on('focus',function(){
+        $('.datepicker').each(function(){
+            $(this).datepicker('hide');
+        });
+    });
+
 });
 
 function displayErrorMessage(rowId, response, linkObject)
