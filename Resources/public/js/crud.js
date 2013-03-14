@@ -67,7 +67,6 @@ $(document).ready(function () {
                     var rowId = currentLink.data('row-id');
                     window[currentLink.data('success-callback-function')](rowId, response, currentLink);
                 }
-
             },
             error: function(response) {
                 img.hide();
@@ -82,21 +81,18 @@ $(document).ready(function () {
     }));
 
 
-    $('.datepicker').datepicker().on('show',function(){
-        var current = this;
-        $('.datepicker').each(function(){
-            if(this != current){
-                $(this).datepicker('hide');
-            }
-        });
-    });
-    $('.datepicker').on('unfocus',function(){
-        $(this).datepicker('hide');
-    });
-    $('select , input').on('focus',function(){
-        $('.datepicker').each(function(){
+    $('.dates').datepicker()
+        .on('changeDate',function(){
             $(this).datepicker('hide');
         });
+
+    $('select , input').on('focus',function(){
+        $('.dates').each(function(){
+            $(this).datepicker('hide');
+        });
+        if($(this).hasClass('dates')){
+            $(this).datepicker('show');
+        }
     });
 
 });
