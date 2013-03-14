@@ -82,8 +82,10 @@ $(document).ready(function () {
 
 
     $('.dates').datepicker()
-        .on('changeDate',function(){
-            $(this).datepicker('hide');
+        .on('changeDate',function(ev){
+            if(ev.viewMode == 'days'){
+                $(this).datepicker('hide');
+            }
         });
 
     $('select , input').on('focus',function(){
