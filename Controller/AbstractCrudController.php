@@ -49,6 +49,7 @@ abstract class AbstractCrudController extends Controller
 
                     return $this->redirect($this->postAddRedirectTo());
                 } catch (\Exception $e) {
+                    $this->get('logger')->err($e);
                     $this->get('session')->setFlash('error', 'Error saving ' . $formClass->getName());
                 }
             } else {
