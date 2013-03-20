@@ -43,7 +43,7 @@ $(document).ready(function () {
         $("#crud_filter_form").submit();
     });
 
-    $("body").delegate(".change_position", "click", function() {
+    $("body").delegate("a.ajax-action-button", "click", function() {
         event.preventDefault();
 
         var img = $('<img>');
