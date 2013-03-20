@@ -43,7 +43,7 @@ $(document).ready(function () {
         $("#crud_filter_form").submit();
     });
 
-    $("a.ajax-action-button").live("click", (function(event) {
+    $("body").delegate(".change_position", "click", function() {
         event.preventDefault();
 
         var img = $('<img>');
@@ -78,7 +78,7 @@ $(document).ready(function () {
 
             }
         });
-    }));
+    });
 
 
     $('.dates').datepicker()
