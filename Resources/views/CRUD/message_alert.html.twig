@@ -3,7 +3,10 @@
         {% if app.session.hasFlash('error') %}
             <div class="alert alert-block alert-error">
                  <a class="close" data-dismiss="alert" href="#">X</a>
-                <strong>Error:</strong> {{ app.session.flash('error') }}
+                <strong>Error:</strong> <br>
+                {% for errorFlashMessage in app.session.flashbag.get('error') %}
+                    {{ errorFlashMessage }} <br>
+                {% endfor %}
             </div>
         {% endif %}
         {% if app.session.hasFlash('success') %}
