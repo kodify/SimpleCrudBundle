@@ -402,8 +402,12 @@ class CrudControllerTest extends TestBaseClass
             ->shouldReceive('getId')->once()->andReturn(1)
             ->getMock();
 
+        $mockFlashBag = M::mock();
+        $mockFlashBag->shouldReceive('add')->once()->with('error', 'Error saving test');
+
         $mockSession = M::mock();
-        $mockSession->shouldReceive('setFlash')->once()->with('error', 'Error saving test');
+        $mockSession->shouldReceive('getFlashBag')->andReturn($mockFlashBag);
+
 
         $mockFormObject = M::mock();
         $mockFormObject->shouldReceive('getName')->once()->andReturn('test');
@@ -435,9 +439,12 @@ class CrudControllerTest extends TestBaseClass
         $mockEntity = M::mock();
         $mockEntity->shouldReceive('getName')->never()->andReturn('entity name');
 
-        $mockSession = M::mock();
-        $mockSession->shouldReceive('setFlash')->once()->with('success', 'test updated successfully');
+        $mockFlashBag = M::mock();
+        $mockFlashBag->shouldReceive('add')->once()->with('success', 'test updated successfully');
 
+        $mockSession = M::mock();
+        $mockSession->shouldReceive('getFlashBag')->andReturn($mockFlashBag);
+      
         $mockFormObject = M::mock();
         $mockFormObject->shouldReceive('getName')->once()->andReturn('test');
 
