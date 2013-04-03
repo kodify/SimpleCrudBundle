@@ -1,26 +1,31 @@
-{% if app.session.hasFlash('success') or app.session.hasFlash('error') or app.session.hasFlash('info') %}
-    <div id="action_messages">
-        {% if app.session.hasFlash('error') %}
-            <div class="alert alert-block alert-error">
-                 <a class="close" data-dismiss="alert" href="#">X</a>
-                <strong>Error:</strong> <br>
-                {% for errorFlashMessage in app.session.flashbag.get('error') %}
-                    {{ errorFlashMessage }} <br>
-                {% endfor %}
-            </div>
-        {% endif %}
-        {% if app.session.hasFlash('success') %}
-            <div class="alert alert-block alert-success">
-                 <a class="close" data-dismiss="alert" href="#">X</a>
-                <strong>Success:</strong> {{ app.session.flash('success') }}
-            </div>
-        {% endif %}
-        {% if app.session.hasFlash('info') %}
-            <div class="alert alert-block alert-info">
-                 <a class="close" data-dismiss="alert" href="#">X</a>
-                 <strong>Info:</strong> {{ app.session.flash('info') }}
-            </div>
-        {% endif %}
-    </div>
+{% if app.security.getToken() != null %}
+    {% if app.session.hasFlash('success') or app.session.hasFlash('error') or app.session.hasFlash('info') %}
+        <div id="action_messages">
+            {% if app.session.hasFlash('error') %}
+                <div class="alert alert-block alert-error">
+                     <a class="close" data-dismiss="alert" href="#">X</a>
+                    <strong>Error:</strong> <br>
+                    {% for errorFlashMessage in app.session.flashbag.get('error') %}
+                        {{ errorFlashMessage }} <br>
+                    {% endfor %}
+                    {% for errorFlashMessage in app.session.flashbag.get('error') %}
+                        {{ errorFlashMessage }} <br>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if app.session.hasFlash('success') %}
+                <div class="alert alert-block alert-success">
+                     <a class="close" data-dismiss="alert" href="#">X</a>
+                    <strong>Success:</strong> {{ app.session.flash('success') }}
+                </div>
+            {% endif %}
+            {% if app.session.hasFlash('info') %}
+                <div class="alert alert-block alert-info">
+                     <a class="close" data-dismiss="alert" href="#">X</a>
+                     <strong>Info:</strong> {{ app.session.flash('info') }}
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
 {% endif %}
 
