@@ -27,6 +27,11 @@
             </p>
         </form>
     </div>
+
+{% endblock content %}
+
+{% block foot_script %}
+    {{ parent() }}
     <script>
         $(document).ready(function () {
             $('#cancel_button').on("click", function () {
@@ -34,4 +39,4 @@
             });
         });
     </script>
-{% endblock content %}
+{% endblock foot_script %}

@@ -12,7 +12,7 @@
     {{ parent() }}
 {% endblock head_style %}
 
-{% block head_script %}
+{% block foot_script %}
     {%- javascripts
         '@KodifySimpleCrudBundle/Resources/public/js/jquery-1.9.1.min.js'
         '@KodifySimpleCrudBundle/Resources/public/js/bootstrap.min.js'
@@ -21,4 +21,4 @@
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
-{% endblock head_script %}
+{% endblock foot_script %}
