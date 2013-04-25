@@ -19,9 +19,20 @@ abstract class AbstractCrudRepository extends EntityRepository
 
     public function getTotalRows($filters = array(), $pageSize = 25, $currentPage = 0)
     {
-        $paginator = new Paginator($this->getQuery($filters, $pageSize, $currentPage));
+        $identifiers = ($this->getClassMetadata()->getIdentifier());
 
-        return count($paginator);
+        if (is_array($this->selectLeftJoin)) {
+            $query = $this->createQueryBuilder('p')
+                ->select('p')
+                ->setMaxResults($pageSize)
+                ->setFirstResult($currentPage * $pageSize);
+
+            Parser\FilterParser::parseFilters($filters, $query);
+        } else {
+            $query = $this->getQuery($filters, $pageSize, $currentPage);
+        }
+
+        return count(new Paginator($query));
     }
 
     public function getQuery($filters = array(), $pageSize = 25, $currentPage = 0, $sort = null, $defaultSort = null)
