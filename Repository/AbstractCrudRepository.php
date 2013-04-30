@@ -22,10 +22,15 @@ abstract class AbstractCrudRepository extends EntityRepository
         $identifiers = ($this->getClassMetadata()->getIdentifier());
 
         if (is_array($this->selectLeftJoin)) {
+
             $query = $this->createQueryBuilder('p')
                 ->select('p')
                 ->setMaxResults($pageSize)
                 ->setFirstResult($currentPage * $pageSize);
+
+            foreach ($this->selectLeftJoin as $join) {
+                $query->leftJoin($join['field'], $join['alias']);
+            }
 
             Parser\FilterParser::parseFilters($filters, $query);
         } else {
@@ -41,19 +46,22 @@ abstract class AbstractCrudRepository extends EntityRepository
             ->select($this->selectEntities);
 
         if (is_array($this->selectLeftJoin)) {
-            foreach ($this->selectLeftJoin as $join) {
-                $query->leftJoin($join['field'], $join['alias']);
-            }
 
             $identifiers = ($this->getClassMetadata()->getIdentifier());
-
             $queryToRetrieveIds = $this->createQueryBuilder('p')
                 ->select('p.' . $identifiers[0])
                 ->setMaxResults($pageSize)
                 ->setFirstResult($currentPage * $pageSize);
 
+            foreach ($this->selectLeftJoin as $join) {
+                $query->leftJoin($join['field'], $join['alias']);
+                $queryToRetrieveIds->leftJoin($join['field'], $join['alias']);
+            }
+
             Parser\FilterParser::parseFilters($filters, $queryToRetrieveIds);
             Parser\SortParser::parseSort($sort, $defaultSort, $queryToRetrieveIds);
+
+            $queryToRetrieveIds->groupBy('p.' . $identifiers[0]);
 
             $selectedEntities = $queryToRetrieveIds->getQuery()->expireQueryCache(true)->getArrayResult();
             $ids = array();
