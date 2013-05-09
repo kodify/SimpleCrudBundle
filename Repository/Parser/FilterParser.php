@@ -7,7 +7,8 @@ class FilterParser
     {
         if (!empty($filters)) {
             foreach ($filters as $key => $filter) {
-                if (!empty($filter) && !(is_array($filter) && empty($filter['value']))) {
+
+                if ((!is_array($filter) && $filter != '') || (is_array($filter) && !empty($filter['value']))) {
                     $defaultOperator = '=';
                     $defaultEntity = 'p';
 
