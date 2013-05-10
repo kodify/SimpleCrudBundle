@@ -310,13 +310,13 @@ class CrudControllerTest extends TestBaseClass
     {
         $stub = $this->getMockBuilder('Kodify\SimpleCrudBundle\Controller\AbstractCrudController')
             ->setMethods(
-            array(
-                'defineTableHeader',
-                'getData',
-                'getTotalRows',
-                'getPageSize'
+                array(
+                    'defineTableHeader',
+                    'getData',
+                    'getTotalRows',
+                    'getPageSize'
+                )
             )
-        )
             ->getMock();
 
         $stub->expects($this->any())->method('defineTableHeader')
@@ -444,7 +444,7 @@ class CrudControllerTest extends TestBaseClass
 
         $mockSession = M::mock();
         $mockSession->shouldReceive('getFlashBag')->andReturn($mockFlashBag);
-      
+
         $mockFormObject = M::mock();
         $mockFormObject->shouldReceive('getName')->once()->andReturn('test');
 
