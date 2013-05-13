@@ -30,7 +30,7 @@ $(document).ready(function () {
     $('.sort_index').on("click", function () {
         var key = $(this).data('sort-field');
         if ($("#sort_field").val() === key) {
-            curr_dir = $("#sort_dir").val();
+            var curr_dir = $("#sort_dir").val();
             if (curr_dir === 'ASC') {
                 $("#sort_dir").val('DESC');
             } else {
