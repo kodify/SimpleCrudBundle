@@ -1,33 +1,36 @@
 {% extends 'KodifySimpleCrudBundle::layout.html.twig' %}
 
 {% block content %}
-    <div class="row header">
-            <div class="pull-left">
-                <h1>{{ page_title }}</h1>
+    <div class="row form_layout">
+        <div class="span20">
+            <div class="row header">
+                    <div class="pull-left">
+                        <h1>{{ page_title }}</h1>
+                    </div>
             </div>
+            <div class="well">
+                {% include "KodifySimpleCrudBundle:CRUD:message_alert.html.twig" %}
+                {% set form_parameters = {} %}
+                {% if form_destination|keys %}
+                    {% set form_parameters = form_destination.1 %}
+                    {% set form_destination = form_destination.0 %}
+                {% endif %}
+                <form id="crud_form" action="{{ path(form_destination, form_parameters) }}" method="post" {{ form_enctype(form) }} novalidate>
+                    {{ form_widget(form) }}
+                    <p>
+                        <button class="btn btn-primary" type="submit">
+                            {% if submit_literal is defined %}
+                                {{ submit_literal }}
+                            {% else %}
+                                {% if new_object %}Create{% else %}Save{% endif %}
+                            {% endif %}
+                        </button>
+                        <button class="btn btn-danger" type="button" id="cancel_button">Cancel</button>
+                    </p>
+                </form>
+            </div>
+        </div>
     </div>
-    <div class="well">
-        {% include "KodifySimpleCrudBundle:CRUD:message_alert.html.twig" %}
-        {% set form_parameters = {} %}
-        {% if form_destination|keys %}
-            {% set form_parameters = form_destination.1 %}
-            {% set form_destination = form_destination.0 %}
-        {% endif %}
-        <form id="crud_form" action="{{ path(form_destination, form_parameters) }}" method="post" {{ form_enctype(form) }} novalidate>
-            {{ form_widget(form) }}
-            <p>
-                <button class="btn btn-primary" type="submit">
-                    {% if submit_literal is defined %}
-                        {{ submit_literal }}
-                    {% else %}
-                        {% if new_object %}Create{% else %}Save{% endif %}
-                    {% endif %}
-                </button>
-                <button class="btn btn-danger" type="button" id="cancel_button">Cancel</button>
-            </p>
-        </form>
-    </div>
-
 {% endblock content %}
 
 {% block foot_script %}
