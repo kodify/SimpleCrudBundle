@@ -58,7 +58,7 @@ class FilterParser
         return $query;
     }
 
-    private function isValidItemToFilter($filter)
+    private static function isValidItemToFilter($filter)
     {
         return ((!is_array($filter) && $filter != '') || (is_array($filter) && !empty($filter['value'])));
     }
