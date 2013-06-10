@@ -8,7 +8,7 @@ class FilterParser
         if (!empty($filters)) {
             foreach ($filters as $key => $filter) {
 
-                if ((!is_array($filter) && $filter != '') || (is_array($filter) && !empty($filter['value']))) {
+                if (self::isValidItemToFilter($filter)) {
                     $defaultOperator = '=';
                     $defaultEntity = 'p';
 
@@ -56,5 +56,10 @@ class FilterParser
         }
 
         return $query;
+    }
+
+    private function isValidItemToFilter($filter)
+    {
+        return ((!is_array($filter) && $filter != '') || (is_array($filter) && !empty($filter['value'])));
     }
 }
