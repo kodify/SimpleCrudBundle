@@ -52,7 +52,7 @@ class CrudControllerTest extends TestBaseClass
         );
 
         $diff = array_intersect_assoc($result[0], array('a' => 3, 'b' => 2, 'c' => 1));
-        $this->assertCount(3 , $diff);
+        $this->assertCount(3, $diff);
     }
 
     public function testSortTableRowsLeftJoin()
