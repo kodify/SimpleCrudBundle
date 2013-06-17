@@ -68,6 +68,7 @@ abstract class AbstractCrudController extends Controller
                 'cancel_url'       => $this->postAddRedirectTo(),
                 'form'             => $form->createView(),
                 'new_object'       => ($obj->getId() == null),
+                'object'           => $obj,
                 'page_title'       => $form->getName(),
                 'form_destination' => $destinationUrl,
             )
