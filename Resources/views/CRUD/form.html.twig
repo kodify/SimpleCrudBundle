@@ -5,7 +5,7 @@
         <div class="span20">
             <div class="row header">
                     <div class="pull-left">
-                        <h1>{{ page_title }}</h1>
+                        <h1>{% block form_title %}{{ page_title }}{% endblock form_title %}</h1>
                     </div>
             </div>
             <div class="well">
@@ -16,6 +16,7 @@
                     {% set form_destination = form_destination.0 %}
                 {% endif %}
                 <form id="crud_form" action="{{ path(form_destination, form_parameters) }}" method="post" {{ form_enctype(form) }} novalidate>
+                    {% block pre_form_block %}{% endblock pre_form_block %}
                     {{ form_widget(form) }}
                     <p>
                         <button class="btn btn-primary" type="submit">

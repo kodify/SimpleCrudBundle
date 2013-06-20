@@ -68,6 +68,7 @@ abstract class AbstractCrudController extends Controller
                 'cancel_url'       => $this->postAddRedirectTo(),
                 'form'             => $form->createView(),
                 'new_object'       => ($obj->getId() == null),
+                'object'           => $obj,
                 'page_title'       => $form->getName(),
                 'form_destination' => $destinationUrl,
             )
@@ -221,7 +222,7 @@ abstract class AbstractCrudController extends Controller
             foreach ($sortedIndexes as $index) {
                 if (strpos($index, '.') > 0) {
                     $fields         = explode(".", $index);
-                    $tmpRow[$index] = $row[strtolower($fields[0])][$fields[1]];
+                    $tmpRow[$index] = $row[lcfirst($fields[0])][$fields[1]];
                 } else {
                     $tmpRow[$index] = $row[$index];
                 }

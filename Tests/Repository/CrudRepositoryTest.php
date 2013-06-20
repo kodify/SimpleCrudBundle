@@ -91,16 +91,16 @@ class CrudRepository extends TestBaseClass
         $orderBy = $result->getDQLPart('orderBy');
 
         $this->assertTrue($result instanceof \Doctrine\ORM\QueryBuilder);
-        $this->assertEquals(count($result->getDQLPart('where')->getParts()), 5);
-        $this->assertEquals(count($orderBy), 4);
+        $this->assertEquals(5, count($result->getDQLPart('where')->getParts()));
+        $this->assertEquals(4, count($orderBy));
 
         $orderPos0 = $orderBy[0]->getParts();
-        $this->assertEquals($orderPos0[0], 'p.f1 ASC');
+        $this->assertEquals('p.f1 ASC', $orderPos0[0]);
         $orderPos1 = $orderBy[1]->getParts();
-        $this->assertEquals($orderPos1[0], 'p.f2 DESC');
+        $this->assertEquals('p.f2 DESC', $orderPos1[0]);
 
-        $this->assertEquals($result->getFirstResult(), 55 * 2);
-        $this->assertEquals($result->getMaxResults(), 55);
+        $this->assertEquals(55 * 2, $result->getFirstResult());
+        $this->assertEquals(55, $result->getMaxResults());
     }
 
     public function testGetQueryWithOperator()
@@ -118,13 +118,13 @@ class CrudRepository extends TestBaseClass
         );
 
         $where = $result->getDQLPart('where')->getParts();
-        $this->assertEquals(count($where), 1);
-        $this->assertEquals($where[0], 'p.id != :value_id');
+        $this->assertCount(1, $where);
+        $this->assertEquals('p.id != :value_id', $where[0]);
 
         $params = $result->getParameters();
-        $this->assertEquals(count($params), 1);
-        $this->assertEquals($params[0]->getName(), 'value_id');
-        $this->assertEquals($params[0]->getValue(), '10');
+        $this->assertCount(1, $params);
+        $this->assertEquals('value_id', $params[0]->getName());
+        $this->assertEquals('10', $params[0]->getValue());
     }
 
 
@@ -204,17 +204,16 @@ class CrudRepository extends TestBaseClass
         $result = $this->callControllerMethod('getQuery', array($input));
 
         $where = $result->getDQLPart('where')->getParts();
-        $this->assertEquals(count($where), $expected['qty']);
-        $this->assertEquals($where[0], $expected['where'][0]);
+        $this->assertCount($expected['qty'], $where);
+        $this->assertEquals($expected['where'][0], $where[0]);
 
         $params = $result->getParameters();
-        $this->assertEquals(count($params), $expected['params_qty']);
+        $this->assertCount($expected['params_qty'], $params);
 
         if ($expected['params_qty'] > 0) {
-            $this->assertEquals($params[0]->getName(), $expected['params'][0]['name']);
-            $this->assertEquals($params[0]->getValue(), $expected['params'][0]['value']);
+            $this->assertEquals($expected['params'][0]['name'], $params[0]->getName());
+            $this->assertEquals($expected['params'][0]['value'], $params[0]->getValue());
         }
     }
-
 
 }

@@ -52,7 +52,7 @@ class CrudControllerTest extends TestBaseClass
         );
 
         $diff = array_intersect_assoc($result[0], array('a' => 3, 'b' => 2, 'c' => 1));
-        $this->assertTrue(count($diff) == 3);
+        $this->assertCount(3, $diff);
     }
 
     public function testSortTableRowsLeftJoin()
@@ -74,17 +74,17 @@ class CrudControllerTest extends TestBaseClass
         );
 
         $diff = array_intersect_assoc($result[0], array('a' => 3, 'b' => 2, 'c.d' => 1));
-        $this->assertTrue(count($diff) == 3);
+        $this->assertCount(3, $diff);
     }
 
     public function paginatorDataProviderCount()
     {
         return array(
-            array('1', array(2, 2, 0)),
-            array('2', array(4, 2, 0)),
-            array('2', array(5, 3, 0)),
-            array('3', array(5, 2, 0)),
-            array('7', array(100, 2, 0))
+            array(1, array(2, 2, 0)),
+            array(2, array(4, 2, 0)),
+            array(2, array(5, 3, 0)),
+            array(3, array(5, 2, 0)),
+            array(7, array(100, 2, 0))
         );
     }
 
@@ -94,7 +94,7 @@ class CrudControllerTest extends TestBaseClass
     public function testGetPaginatorCount($expected, $data)
     {
         $result = $this->callControllerMethod('getPaginator', $data);
-        $this->assertEquals(count($result), $expected);
+        $this->assertCount($expected, $result);
     }
 
 
@@ -115,7 +115,7 @@ class CrudControllerTest extends TestBaseClass
     {
         $result = $this->callControllerMethod('getPaginator', $data);
         $diff   = array_intersect($result, $expectedData);
-        $this->assertTrue(count($diff) == count($expectedData));
+        $this->assertEquals(count($expectedData), count($diff));
     }
 
     public function getCurrentPageDataProvider()
@@ -140,7 +140,7 @@ class CrudControllerTest extends TestBaseClass
             array('form' => array('current_page' => $param))
         );
 
-        $this->assertEquals($result, $expected);
+        $this->assertEquals($expected, $result);
     }
 
     public function getPageSizeDataProvider()
@@ -164,42 +164,42 @@ class CrudControllerTest extends TestBaseClass
         $form = array('form' => array('page_size' => $param));
 
         $result = $this->callControllerMethod('getPageSize', array(), $form);
-        $this->assertEquals($result, $expected);
+        $this->assertEquals($expected, $result);
     }
 
     public function testGetSort()
     {
-        $form   = array('sort' => 'test');
-        $result = $this->callControllerMethod('getSort', array(), $form);
-        $this->assertEquals($result, 'test');
+        $requestParams   = array('sort' => 'test');
+        $result = $this->callControllerMethod('getSort', array(), $requestParams);
+        $this->assertEquals('test', $result);
     }
 
     public function testGetSortWithPost()
     {
-        $form   = array('sort' => array('field' => 'id', 'dir' => 'ASC'));
-        $result = $this->callControllerMethod('getSort', array(), $form);
-        $this->assertEquals($result, array('id' => array('field' => 'id', 'direction' => 'ASC')));
+        $requestParams   = array('sort' => array('field' => 'id', 'dir' => 'ASC'));
+        $result = $this->callControllerMethod('getSort', array(), $requestParams);
+        $this->assertEquals(array('id' => array('field' => 'id', 'direction' => 'ASC')), $result);
     }
 
     public function testGetUsedFilterFields()
     {
-        $form   = array('filter' => 'test');
-        $result = $this->callControllerMethod('getUsedFilterFields', array(), $form);
-        $this->assertEquals($result, 'test');
+        $requestParams   = array('filter' => 'test');
+        $result = $this->callControllerMethod('getUsedFilterFields', array(), $requestParams);
+        $this->assertEquals('test', $result);
     }
 
     public function testGetPaginatorNext()
     {
-        $form   = array('form' => array('current_page' => 1));
-        $result = $this->callControllerMethod('getPaginatorNext', array(), $form);
-        $this->assertEquals($result, 2);
+        $requestParams   = array('form' => array('current_page' => 1));
+        $result = $this->callControllerMethod('getPaginatorNext', array(), $requestParams);
+        $this->assertEquals(2, $result);
     }
 
     public function testGetPaginatorPrev()
     {
-        $form   = array('form' => array('current_page' => 1));
-        $result = $this->callControllerMethod('getPaginatorPrev', array(), $form);
-        $this->assertEquals($result, 0);
+        $requestParams   = array('form' => array('current_page' => 1));
+        $result = $this->callControllerMethod('getPaginatorPrev', array(), $requestParams);
+        $this->assertEquals(0, $result);
     }
 
     public function testGetPageSizes()
@@ -238,7 +238,7 @@ class CrudControllerTest extends TestBaseClass
 
         foreach ($result as $action) {
             $this->assertArrayHasKey('ico', $action);
-            $this->assertEquals($action['ico'], 'testIco');
+            $this->assertEquals('testIco', $action['ico']);
             $this->assertArrayHasKey('label', $action);
             $this->assertEquals($action['label'], 'testLabel');
 
@@ -266,7 +266,7 @@ class CrudControllerTest extends TestBaseClass
     public function testHasSearchableFields($params, $expected)
     {
         $result = $this->callControllerMethod('hasSearchableFields', array($params));
-        $this->assertEquals($result, $expected);
+        $this->assertEquals($expected, $result);
     }
 
     public function testGetHeaderIndexes()
@@ -285,7 +285,7 @@ class CrudControllerTest extends TestBaseClass
         $result = $this->callControllerMethod('getHeaderIndexes', array($params));
 
         $diff = array_intersect($result, array('value1', 'value2'));
-        $this->assertTrue(count($diff) == 2);
+        $this->assertCount(2, $diff);
     }
 
     public function getAddActionUrlDataProvider()
@@ -314,7 +314,8 @@ class CrudControllerTest extends TestBaseClass
                     'defineTableHeader',
                     'getData',
                     'getTotalRows',
-                    'getPageSize'
+                    'getPageSize',
+                    'getSort'
                 )
             )
             ->getMock();
@@ -331,6 +332,14 @@ class CrudControllerTest extends TestBaseClass
         $stub->expects($this->any())->method('getPageSize')
             ->will($this->returnValue(10));
 
+        $stub->expects($this->any())->method('getSort')
+            ->will(
+                $this->returnValue(
+                    array('fieldToSort' => array('direction' => 'ASC'))
+                )
+            );
+
+
         $this->setRequest($stub);
 
         $result = $stub->getTemplateParams();
@@ -346,10 +355,12 @@ class CrudControllerTest extends TestBaseClass
             $this->assertArrayHasKey($index, $result);
         }
 
-        $this->assertEquals($result['total_rows'], 100);
-        $this->assertEquals($result['str_from'], 1);
-        $this->assertEquals($result['str_to'], 10);
-        $this->assertEquals($result['total_pages'], 10);
+        $this->assertEquals(100, $result['total_rows']);
+        $this->assertEquals(1, $result['str_from']);
+        $this->assertEquals(10, $result['str_to']);
+        $this->assertEquals(10, $result['total_pages']);
+        $this->assertEquals('fieldToSort', $result['current_sort_field']);
+        $this->assertEquals('ASC', $result['current_sort_direction']);
     }
 
     /**
