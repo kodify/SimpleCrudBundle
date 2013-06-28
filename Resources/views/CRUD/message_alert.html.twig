@@ -1,7 +1,7 @@
 {% if app.security.getToken() != null %}
-    {% if app.session.has('success') or app.session.has('error') or app.session.has('info') %}
+    {% if app.session.flashbag.has('success') or app.session.flashbag.has('error') or app.session.flashbag.has('info') %}
         <div id="action_messages">
-            {% if app.session.has('error') %}
+            {% if app.session.flashbag.has('error') %}
                 <div class="alert alert-block alert-error">
                      <a class="close" data-dismiss="alert" href="#">X</a>
                     <strong>Error:</strong> <br>
@@ -13,16 +13,16 @@
                     {% endfor %}
                 </div>
             {% endif %}
-            {% if app.session.has('success') %}
+            {% if app.session.flashbag.has('success') %}
                 <div class="alert alert-block alert-success">
                      <a class="close" data-dismiss="alert" href="#">X</a>
-                    <strong>Success:</strong> {{ app.session.flash('success') }}
+                    <strong>Success:</strong> {{ app.session.flashbag.get('success') }}
                 </div>
             {% endif %}
-            {% if app.session.has('info') %}
+            {% if app.session.flashbag.has('info') %}
                 <div class="alert alert-block alert-info">
                      <a class="close" data-dismiss="alert" href="#">X</a>
-                     <strong>Info:</strong> {{ app.session.flash('info') }}
+                     <strong>Info:</strong> {{ app.session.flashbag.get('info') }}
                 </div>
             {% endif %}
         </div>
