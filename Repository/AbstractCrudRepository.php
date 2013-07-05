@@ -4,11 +4,27 @@ namespace Kodify\SimpleCrudBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\ORM\Mapping\ClassMetadata;
 
 abstract class AbstractCrudRepository extends EntityRepository
 {
     protected $selectEntities = 'p';
     protected $selectLeftJoin = null;
+
+    public function __construct($em, ClassMetadata $class, $selectEntities = null, $selectLeftJoin = null)
+    {
+        $this->_entityName = $class->name;
+        $this->_em         = $em;
+        $this->_class      = $class;
+
+        if ($selectEntities != null) {
+            $this->selectEntities = $selectEntities;
+        }
+
+        if ($selectLeftJoin != null) {
+            $this->selectLeftJoin = $selectLeftJoin;
+        }
+    }
 
     public function getRows($filters = array(), $pageSize = 25, $currentPage = 0, $sort = null, $defaultSort = null)
     {
@@ -37,6 +53,14 @@ abstract class AbstractCrudRepository extends EntityRepository
             $query = $this->getQuery($filters, $pageSize, $currentPage);
         }
 
+        return $this->countQuery($query);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function countQuery($query)
+    {
         return count(new Paginator($query));
     }
 
