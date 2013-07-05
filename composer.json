@@ -26,7 +26,7 @@
         "symfony/symfony": "2.1.*",
         "doctrine/orm": ">=2.2.3,<2.4-dev",
         "doctrine/doctrine-bundle": "1.0.*",
-        "mockery/mockery": "dev-master"
+        "mockery/mockery": "dev-master#3bd6f1712642838b4c0524d3a47359940df72e80"
     },
     "require-dev": {
         "php": ">=5.3.3",
