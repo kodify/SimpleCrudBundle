@@ -222,7 +222,7 @@ abstract class AbstractCrudController extends Controller
             foreach ($sortedIndexes as $index) {
                 if (strpos($index, '.') > 0) {
                     $fields         = explode(".", $index);
-                    $tmpRow[$index] = $row[strtolower($fields[0])][$fields[1]];
+                    $tmpRow[$index] = $row[lcfirst($fields[0])][$fields[1]];
                 } else {
                     $tmpRow[$index] = $row[$index];
                 }
