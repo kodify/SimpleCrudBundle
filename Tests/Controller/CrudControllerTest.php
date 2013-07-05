@@ -396,6 +396,57 @@ class CrudControllerTest extends TestBaseClass
         $this->assertTrue(true, 'If we arrive here everything was called in the correct order');
     }
 
+    /**
+     * @group addAction
+     */
+
+    public function testAddActionWithException()
+    {
+        $mockRequest = M::mock('Symfony\Component\HttpFoundation\Request[isMethod]');
+        $mockRequest->shouldReceive('isMethod')->once()->andReturn(true);
+
+        $mockFormObject = M::mock();
+        $mockFormObject->shouldReceive('getName')->once()->andReturn('test');
+
+        $mockForm = M::mock('Symfony\Component\Form\Form[getName,createView,bind,isValid]')
+            ->shouldReceive('createView')->once()->andReturn('view')
+            ->shouldReceive('getName')->times(1)->andReturn('form name')
+            ->shouldReceive('bind')->times(1)
+            ->shouldReceive('isValid')->times(1)->andReturn(true)
+            ->getMock();
+
+        $mockEntity = M::mock()
+            ->shouldReceive('getName')->times(0)->andReturn('entity name')
+            ->shouldReceive('getId')->once()->andReturn(1)
+            ->getMock();
+
+        $mockFlashBag = M::mock();
+        $mockFlashBag->shouldReceive('add')->once()->with('error', 'Error saving test');
+
+        $mockSession = M::mock();
+        $mockSession->shouldReceive('getFlashBag')->andReturn($mockFlashBag);
+
+        $mockLogger = M::mock();
+        $mockLogger->shouldReceive('err')->once();
+
+        $mockDoctrine = M::mock();
+        $mockDoctrine->shouldReceive('getManager')->once()->andThrow(new \Exception('test'));
+
+        $methods    = 'getEntityForm,getEntityFromRequest,createForm,generateUrl,render,get, getDoctrine';
+
+        $controller = M::mock('Kodify\SimpleCrudBundle\Controller\AbstractCrudController[' . $methods . ']');
+        $controller->shouldReceive('getEntityForm')->once()->andReturn($mockFormObject);
+        $controller->shouldReceive('createForm')->andReturn($mockForm);
+        $controller->shouldReceive('generateUrl')->once()->andReturn('url');
+        $controller->shouldReceive('render')->once();
+        $controller->shouldReceive('getEntityFromRequest')->once()->andReturn($mockEntity);
+        $controller->shouldReceive('get')->once()->with('session')->andReturn($mockSession);
+        $controller->shouldReceive('get')->once()->with('logger')->andReturn($mockLogger);
+        $controller->shouldReceive('getDoctrine')->once()->andReturn($mockDoctrine);
+
+        $controller->addAction($mockRequest);
+    }
+
     public function testGetActionInvalid()
     {
         $mockRequest = M::mock('Symfony\Component\HttpFoundation\Request[isMethod]');
@@ -430,7 +481,7 @@ class CrudControllerTest extends TestBaseClass
         $controller->shouldReceive('generateUrl')->once()->andReturn('url');
         $controller->shouldReceive('render')->once();
         $controller->shouldReceive('getEntityFromRequest')->once()->andReturn($mockEntity);
-        $controller->shouldReceive('get')->once()->andReturn($mockSession);
+        $controller->shouldReceive('get')->once()->with('session')->andReturn($mockSession);
 
         $controller->addAction($mockRequest);
 

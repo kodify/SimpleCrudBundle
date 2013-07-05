@@ -341,6 +341,9 @@ abstract class AbstractCrudController extends Controller
         return $this->get('request')->get('filter');
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     protected function getDefaultSort()
     {
 
