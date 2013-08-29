@@ -66,6 +66,7 @@ abstract class AbstractCrudRepository extends EntityRepository
 
     public function getQuery($filters = array(), $pageSize = 25, $currentPage = 0, $sort = null, $defaultSort = null)
     {
+
         $query = $this->createQueryBuilder('p')
             ->select($this->selectEntities);
 

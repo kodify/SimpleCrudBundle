@@ -7,6 +7,11 @@
         {% include "KodifySimpleCrudBundle:CRUD:message_alert.html.twig" %}
 
         <div class="pull-right">
+            {% for action in main_actions %}
+                <a class="btn btn-small" href="{{ path(action.route_name) }}"">
+                    {{ action.label }}
+                </a>
+            {% endfor %}
             {% if searchable %}
                 <a class="btn btn-small" id="crud_search_button">
                     <i class="icon-search"></i> Search

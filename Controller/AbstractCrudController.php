@@ -18,6 +18,7 @@ abstract class AbstractCrudController extends Controller
      * array with actions, possible values are delete, edit, view
      * @var array
      */
+    protected $generalActions = array();
     protected $actions = array('edit');
     protected $indexKey = null;
     protected $controllerName = null;
@@ -159,6 +160,7 @@ abstract class AbstractCrudController extends Controller
             'table_header'                  => $tableHeader,
             'has_row_actions'               => !empty($this->actions),
             'table_row_actions'             => $rowActions,
+            'main_actions'                  => $this->generalActions,
             'sorted_row_indexes'            => $sortedIndexes,
             'searchable'                    => $this->hasSearchableFields($tableHeader),
             'add_action'                    => $this->addAction,
