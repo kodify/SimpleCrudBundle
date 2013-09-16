@@ -4,11 +4,27 @@ namespace Kodify\SimpleCrudBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\ORM\Mapping\ClassMetadata;
 
 abstract class AbstractCrudRepository extends EntityRepository
 {
     protected $selectEntities = 'p';
     protected $selectLeftJoin = null;
+
+    public function __construct($em, ClassMetadata $class, $selectEntities = null, $selectLeftJoin = null)
+    {
+        $this->_entityName = $class->name;
+        $this->_em         = $em;
+        $this->_class      = $class;
+
+        if ($selectEntities != null) {
+            $this->selectEntities = $selectEntities;
+        }
+
+        if ($selectLeftJoin != null) {
+            $this->selectLeftJoin = $selectLeftJoin;
+        }
+    }
 
     public function getRows($filters = array(), $pageSize = 25, $currentPage = 0, $sort = null, $defaultSort = null)
     {
@@ -37,44 +53,25 @@ abstract class AbstractCrudRepository extends EntityRepository
             $query = $this->getQuery($filters, $pageSize, $currentPage);
         }
 
+        return $this->countQuery($query);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function countQuery($query)
+    {
         return count(new Paginator($query));
     }
 
     public function getQuery($filters = array(), $pageSize = 25, $currentPage = 0, $sort = null, $defaultSort = null)
     {
+
         $query = $this->createQueryBuilder('p')
             ->select($this->selectEntities);
 
         if (is_array($this->selectLeftJoin)) {
-
-            $identifiers = ($this->getClassMetadata()->getIdentifier());
-            $queryToRetrieveIds = $this->createQueryBuilder('p')
-                ->select('p.' . $identifiers[0])
-                ->setMaxResults($pageSize)
-                ->setFirstResult($currentPage * $pageSize);
-
-            foreach ($this->selectLeftJoin as $join) {
-                $query->leftJoin($join['field'], $join['alias']);
-                $queryToRetrieveIds->leftJoin($join['field'], $join['alias']);
-            }
-
-            Parser\FilterParser::parseFilters($filters, $queryToRetrieveIds);
-            Parser\SortParser::parseSort($sort, $defaultSort, $queryToRetrieveIds);
-
-            $queryToRetrieveIds->groupBy('p.' . $identifiers[0]);
-
-            $selectedEntities = $queryToRetrieveIds->getQuery()->expireQueryCache(true)->getArrayResult();
-            $ids = array();
-            foreach ($selectedEntities as $entity) {
-                $ids[] = $entity[$identifiers[0]];
-            }
-
-            if (empty($ids)) {
-                $query->andWhere('1 != 1');
-            } else {
-                $query->andWhere('p.' . $identifiers[0] . ' IN (:ids_list)')
-                    ->setParameter('ids_list', $ids);
-            }
+            $this->getQueryForSelectLeftJoin($filters, $pageSize, $currentPage, $sort, $defaultSort, $query);
         } else {
             $query->setMaxResults($pageSize)
                 ->setFirstResult($currentPage * $pageSize);
@@ -85,5 +82,46 @@ abstract class AbstractCrudRepository extends EntityRepository
         Parser\SortParser::parseSort($sort, $defaultSort, $query);
 
         return $query;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @param $filters
+     * @param $pageSize
+     * @param $currentPage
+     * @param $sort
+     * @param $defaultSort
+     * @param $query
+     */
+    protected function getQueryForSelectLeftJoin($filters, $pageSize, $currentPage, $sort, $defaultSort, $query)
+    {
+        $identifiers = ($this->getClassMetadata()->getIdentifier());
+        $queryToRetrieveIds = $this->createQueryBuilder('p')
+            ->select('p.' . $identifiers[0])
+            ->setMaxResults($pageSize)
+            ->setFirstResult($currentPage * $pageSize);
+
+        foreach ($this->selectLeftJoin as $join) {
+            $query->leftJoin($join['field'], $join['alias']);
+            $queryToRetrieveIds->leftJoin($join['field'], $join['alias']);
+        }
+
+        Parser\FilterParser::parseFilters($filters, $queryToRetrieveIds);
+        Parser\SortParser::parseSort($sort, $defaultSort, $queryToRetrieveIds);
+
+        $queryToRetrieveIds->groupBy('p.' . $identifiers[0]);
+
+        $selectedEntities = $queryToRetrieveIds->getQuery()->expireQueryCache(true)->getArrayResult();
+        $ids = array();
+        foreach ($selectedEntities as $entity) {
+            $ids[] = $entity[$identifiers[0]];
+        }
+
+        if (empty($ids)) {
+            $query->andWhere('1 != 1');
+        } else {
+            $query->andWhere('p.' . $identifiers[0] . ' IN (:ids_list)')
+                ->setParameter('ids_list', $ids);
+        }
     }
 }

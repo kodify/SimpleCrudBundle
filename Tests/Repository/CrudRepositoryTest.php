@@ -216,4 +216,93 @@ class CrudRepository extends TestBaseClass
         }
     }
 
+    public function testGetTotalRows()
+    {
+        $classMetadata =  new ClassMetadata('Test');
+        $classMetadata->setIdentifier(array('id'));
+
+        $repo = M::mock(
+            'Kodify\SimpleCrudBundle\Repository\AbstractCrudRepository[countQuery,getQuery]',
+            array(
+                $this->em,
+                $classMetadata,
+            )
+        );
+
+        $repo->shouldReceive('countQuery')->with('query')->once()->andReturn(10);
+        $repo->shouldReceive('getQuery')->once()->andReturn('query');
+
+        $result = $repo->getTotalRows(array(), 99, 10);
+        $this->assertEquals(10, $result);
+    }
+
+    public function testGetTotalRowsLeftJoin()
+    {
+        $classMetadata =  new ClassMetadata('Test');
+        $classMetadata->setIdentifier(array('id'));
+
+
+        $mockQueryBuilder =  M::mock();
+        $mockQueryBuilder->shouldReceive('select')->once()->with('p')->andReturn($mockQueryBuilder);
+        $mockQueryBuilder->shouldReceive('setMaxResults')->once()->with(99)->andReturn($mockQueryBuilder);
+        $mockQueryBuilder->shouldReceive('setFirstResult')->once()->with(990)->andReturn($mockQueryBuilder);
+
+        $mockQueryBuilder->shouldReceive('leftJoin')->once()->with('fieldOne', 'aliasOne');
+        $mockQueryBuilder->shouldReceive('leftJoin')->once()->with('fieldTwo', 'aliasTwo');
+
+        $repo = M::mock(
+            'Kodify\SimpleCrudBundle\Repository\AbstractCrudRepository[countQuery,createQueryBuilder]',
+            array(
+                $this->em,
+                $classMetadata,
+                'p',
+                array(
+                    'p' => array('field' => 'fieldOne', 'alias' => 'aliasOne'),
+                    'j' => array('field' => 'fieldTwo', 'alias' => 'aliasTwo'),
+                )
+            )
+        );
+        $repo->shouldReceive('countQuery')->once()->andReturn(10);
+        $repo->shouldReceive('createQueryBuilder')->once()->andReturn($mockQueryBuilder);
+
+        $result = $repo->getTotalRows(array(), 99, 10);
+        $this->assertEquals(10, $result);
+    }
+
+    public function testGetTotalRowsLeftJoinWithFilters()
+    {
+        $classMetadata =  new ClassMetadata('Test');
+        $classMetadata->setIdentifier(array('id'));
+
+
+        $mockQueryBuilder =  M::mock();
+        $mockQueryBuilder->shouldReceive('select')->once()->with('p')->andReturn($mockQueryBuilder);
+        $mockQueryBuilder->shouldReceive('setMaxResults')->once()->with(99)->andReturn($mockQueryBuilder);
+        $mockQueryBuilder->shouldReceive('setFirstResult')->once()->with(990)->andReturn($mockQueryBuilder);
+        $mockQueryBuilder->shouldReceive('andWhere')->andReturn($mockQueryBuilder);
+        $mockQueryBuilder->shouldReceive('setParameter')->andReturn($mockQueryBuilder);
+
+        $mockQueryBuilder->shouldReceive('leftJoin')->once()->with('fieldOne', 'aliasOne');
+        $mockQueryBuilder->shouldReceive('leftJoin')->once()->with('fieldTwo', 'aliasTwo');
+
+        $repo = M::mock(
+            'Kodify\SimpleCrudBundle\Repository\AbstractCrudRepository[countQuery,createQueryBuilder]',
+            array(
+                $this->em,
+                $classMetadata,
+                'p',
+                array(
+                    'p' => array('field' => 'fieldOne', 'alias' => 'aliasOne'),
+                    'j' => array('field' => 'fieldTwo', 'alias' => 'aliasTwo'),
+                )
+            )
+        );
+        $repo->shouldReceive('countQuery')->once()->andReturn(10);
+        $repo->shouldReceive('createQueryBuilder')->once()->andReturn($mockQueryBuilder);
+
+        $filters = [ 'supu.tamadre' => 'ola k ase' ];
+
+        $result = $repo->getTotalRows($filters, 99, 10);
+        $this->assertEquals(10, $result);
+    }
 }
