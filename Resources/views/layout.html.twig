@@ -1,21 +1,40 @@
 {% extends '::base.html.twig' %}
 
 {% block head_style %}
-    
+    {{ parent() }}
     {% stylesheets output='css/*.css' filter='cssrewrite' debug=false
-        'bundles/kodifysimplecrud/css/bootstrap.min.css'
         'bundles/kodifysimplecrud/css/crud.css'
         'bundles/kodifysimplecrud/css/datepicker.css'
     %}
         <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
     {% endstylesheets %}
-    {{ parent() }}
 {% endblock head_style %}
 
 {% block foot_script %}
+    {{ parent() }}
+    <script>
+    if(typeof jQuery=='undefined') {
+        var headTag = document.getElementsByTagName("head")[0];
+        var jqTag = document.createElement('script');
+        jqTag.type = 'text/javascript';
+        jqTag.src = '{{ asset('bundles/kodifysimplecrud/js/jquery-1.9.1.min.js') }}';
+        headTag.appendChild(jqTag);
+    }
+    if(typeof($.fn.modal) === 'undefined') {
+        var headTag = document.getElementsByTagName("head")[0];
+        var jqTag = document.createElement('style');
+        jqTag.type = 'text/css';
+        jqTag.src = '{{ asset('bundles/kodifysimplecrud/css/bootstrap.min.css') }}';
+        headTag.appendChild(jqTag);
+
+        var headTag = document.getElementsByTagName("head")[0];
+        var jqTag = document.createElement('script');
+        jqTag.type = 'text/javascript';
+        jqTag.src = '{{ asset('bundles/kodifysimplecrud/js/bootstrap.min.js') }}';
+        headTag.appendChild(jqTag);
+    }
+    </script>
     {%- javascripts
-        '@KodifySimpleCrudBundle/Resources/public/js/jquery-1.9.1.min.js'
-        '@KodifySimpleCrudBundle/Resources/public/js/bootstrap.min.js'
         '@KodifySimpleCrudBundle/Resources/public/js/crud.js'
         '@KodifySimpleCrudBundle/Resources/public/js/bootstrap-datepicker.js'
     %}
