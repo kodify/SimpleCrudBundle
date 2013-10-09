@@ -12,7 +12,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 abstract class AbstractCrudController extends Controller
 {
-    protected $addAction = false;
+    protected $addAction        = false;
+    protected $flashMessages    = true;
 
     /**
      * array with actions, possible values are delete, edit, view
@@ -46,7 +47,9 @@ abstract class AbstractCrudController extends Controller
                     $this->persist($obj);
                     $this->postPersist($obj);
 
-                    $this->get('session')->getFlashBag()->add('success', $formClass->getName() . ' updated successfully');
+                    if ($this->flashMessages) {
+                        $this->get('session')->getFlashBag()->add('success', $formClass->getName() . ' updated successfully');
+                    }
 
                     return $this->redirect($this->postAddRedirectTo());
                 } catch (\Exception $e) {
