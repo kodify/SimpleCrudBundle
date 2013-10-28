@@ -26,6 +26,8 @@ abstract class AbstractCrudController extends Controller
     protected $entityClass = null;
     protected $formClassName = null;
     protected $formLayout = 'KodifySimpleCrudBundle:CRUD:form.html.twig';
+    protected $listLayout = 'KodifySimpleCrudBundle:CRUD:list.html.twig';
+
     protected $pageTitle = '';
 
     /**
@@ -123,7 +125,7 @@ abstract class AbstractCrudController extends Controller
     public function renderTable()
     {
         return parent::render(
-            'KodifySimpleCrudBundle:CRUD:list.html.twig',
+            $this->listLayout,
             $this->getTemplateParams()
         );
     }
