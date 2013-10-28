@@ -82,7 +82,7 @@ $(document).ready(function () {
     });
 
 
-    $('.dates').datepicker()
+    $('.dates').datepicker({ format: 'yyyy-mm-dd' })
         .on('changeDate', function (ev) {
             if (ev.viewMode === 'days') {
                 $(this).datepicker('hide');
