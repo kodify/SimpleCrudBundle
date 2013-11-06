@@ -1,14 +1,14 @@
 <div class="ovAuto">
     <div class="pull-left">
         <div class="dataTables_info">
-            Showing {{ str_from }} to {{ str_to }} of {{ total_rows }} entries
+            {% trans %}Showing{% endtrans %} {{ str_from }} {% trans %}to{% endtrans %} {{ str_to }} {% trans %}of{% endtrans %} {{ total_rows }} {% trans %}entries{% endtrans %}
         </div>
     </div>
     <div class="pull-right">
         <div class="dataTables_paginate paging_bootstrap pagination">
             <ul>
                 <li class="{% if paginator_prev < 0 %}disabled{% endif %}">
-                    <a id="crud_prev_button" class="{% if paginator_prev >= 0 %}page_link{% endif %}" data-page="{{ paginator_prev }}">← Prev</a>
+                    <a id="crud_prev_button" class="{% if paginator_prev >= 0 %}page_link{% endif %}" data-page="{{ paginator_prev }}">← {% trans %}Prev{% endtrans %}</a>
                 </li>
                 {% for page_number in paginator_page %}
                     <li class="{% if page_number == current_page %}active{% endif %}">
@@ -16,7 +16,7 @@
                     </li>
                 {% endfor %}
                 <li class="{% if paginator_next >= total_pages %}disabled{% endif %}">
-                    <a id="crud_next_button" class="{% if paginator_next < total_pages %}page_link{% endif %}" data-page="{{ paginator_next }}">Next →</a>
+                    <a id="crud_next_button" class="{% if paginator_next < total_pages %}page_link{% endif %}" data-page="{{ paginator_next }}">{% trans %}Next{% endtrans %} →</a>
                 </li>
             </ul>
         </div>
