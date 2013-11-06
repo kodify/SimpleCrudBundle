@@ -31,7 +31,7 @@
                 </th>
             {% endfor %}
             {% if has_row_actions %}
-                <th>Actions</th>
+                <th>{% trans %}Actions{% endtrans %}</th>
             {% endif %}
             {% set field = current_sort_field | default('')  %}
             <input type="hidden" id="sort_field" name="sort[field]" value="{{ field }}">
