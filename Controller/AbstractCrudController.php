@@ -57,10 +57,10 @@ abstract class AbstractCrudController extends Controller
                 } catch (\Exception $e) {
                     $this->get('logger')->err($e);
 
-                    $this->get('session')->getFlashBag()->add('error', 'Error saving ') . $formClass->getName();
+                    $this->get('session')->getFlashBag()->add('error', 'Error saving ' . $formClass->getName());
                 }
             } else {
-                $this->get('session')->getFlashBag()->add('error', 'Error saving ') . $formClass->getName();
+                $this->get('session')->getFlashBag()->add('error', 'Error saving ' . $formClass->getName());
             }
         }
 
