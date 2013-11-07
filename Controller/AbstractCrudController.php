@@ -50,17 +50,17 @@ abstract class AbstractCrudController extends Controller
                     $this->postPersist($obj);
 
                     if ($this->flashMessages) {
-                        $this->get('session')->getFlashBag()->add('success', $formClass->getName() . $this->get('translator')->trans(' updated successfully'));
+                        $this->get('session')->getFlashBag()->add('success', $formClass->getName() . ' updated successfully');
                     }
 
                     return $this->redirect($this->postAddRedirectTo());
                 } catch (\Exception $e) {
                     $this->get('logger')->err($e);
 
-                    $this->get('session')->getFlashBag()->add('error', $this->get('translator')->trans('Error saving ') . $formClass->getName());
+                    $this->get('session')->getFlashBag()->add('error', 'Error saving ') . $formClass->getName();
                 }
             } else {
-                $this->get('session')->getFlashBag()->add('error', $this->get('translator')->trans('Error saving ') . $formClass->getName());
+                $this->get('session')->getFlashBag()->add('error', 'Error saving ') . $formClass->getName();
             }
         }
 
