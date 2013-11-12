@@ -231,7 +231,11 @@ abstract class AbstractCrudController extends Controller
                     $fields         = explode(".", $index);
                     $tmpRow[$index] = $row[lcfirst($fields[0])][$fields[1]];
                 } else {
-                    $tmpRow[$index] = $row[$index];
+                    if (isset($row[$index])) {
+                        $tmpRow[$index] = $row[$index];
+                    } else {
+                        $tmpRow[$index] = '---';
+                    }
                 }
             }
 
