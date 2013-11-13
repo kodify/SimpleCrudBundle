@@ -4,14 +4,10 @@ namespace Kodify\SimpleCrudBundle\Tests\Repository;
 
 use \Mockery as M;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\Scope;
 
-use Kodify\SimpleCrudBundle\Repository\AbstractCrudRepository;
 use Kodify\SimpleCrudBundle\Tests\TestBaseClass;
 use Doctrine\ORM\Mapping\ClassMetadata;
 

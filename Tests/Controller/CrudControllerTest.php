@@ -381,8 +381,6 @@ class CrudControllerTest extends TestBaseClass
             ->shouldReceive('getId')->once()->andReturn(1)
             ->getMock();
 
-        $mockFormObject = M::mock();
-
         $methods    = 'getEntityForm,getEntityFromRequest,createForm,generateUrl,render';
         $controller = M::mock('Kodify\SimpleCrudBundle\Controller\AbstractCrudController[' . $methods . ']');
         $controller->shouldReceive('getEntityForm')->once();

@@ -32,6 +32,6 @@ class SortParserTest extends TestBaseClass
         $queryMock->shouldReceive('addOrderBy')->with('p.fieldOne', 'dirOne')->once();
         $queryMock->shouldReceive('addOrderBy')->with('p.fieldTwo', 'dirTwo')->once();
 
-        $response = SortParser::parseSort($sort, $defaultSort, $queryMock);
+        SortParser::parseSort($sort, $defaultSort, $queryMock);
     }
 }

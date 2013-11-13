@@ -72,6 +72,6 @@ class FilterParserTest extends TestBaseClass
             $queryMock->shouldReceive('setParameter')->with($parameter[0], $parameter[1])->once();
         }
 
-        $response = FilterParser::parseFilters($input, $queryMock);
+        FilterParser::parseFilters($input, $queryMock);
     }
 }

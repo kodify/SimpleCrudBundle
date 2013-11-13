@@ -35,8 +35,6 @@ abstract class AbstractCrudRepository extends EntityRepository
 
     public function getTotalRows($filters = array(), $pageSize = 25, $currentPage = 0)
     {
-        $identifiers = ($this->getClassMetadata()->getIdentifier());
-
         if (is_array($this->selectLeftJoin)) {
 
             $query = $this->createQueryBuilder('p')
