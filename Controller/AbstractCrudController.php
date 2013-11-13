@@ -234,7 +234,7 @@ abstract class AbstractCrudController extends Controller
                     if (isset($row[$index])) {
                         $tmpRow[$index] = $row[$index];
                     } else {
-                        $tmpRow[$index] = '---';
+                        $tmpRow[$index] = '';
                     }
                 }
             }
