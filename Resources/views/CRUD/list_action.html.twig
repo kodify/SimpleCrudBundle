@@ -1,11 +1,11 @@
 {% block render_action %}
     <a  id="{{ key }}_{{ row[index_key] }}"
-        class="btn btn-primary"
+        class="btn btn-primary btn-small"
         data-success-callback-function="hideRow"
         data-error-callback-function="displayErrorMessage"
         data-row-id="{{ row[index_key] }}"
         href="{{ path(action_row.url, {'id' : row[index_key]}) }}"
             >
-        {{ action_row.label }} <i class="icon-{{ action_row.ico }} icon-white"></i>
+        {{ action_row.label }} <span><i class="icon-{{ action_row.ico }} icon-white"></i></span>
     </a>
 {% endblock %}

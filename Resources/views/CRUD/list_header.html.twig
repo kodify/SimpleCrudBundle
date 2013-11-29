@@ -31,7 +31,7 @@
                 </th>
             {% endfor %}
             {% if has_row_actions %}
-                <th>{% trans %}Actions{% endtrans %}</th>
+                <th class='actions'>{% trans %}Actions{% endtrans %}</th>
             {% endif %}
             {% set field = current_sort_field | default('')  %}
             <input type="hidden" id="sort_field" name="sort[field]" value="{{ field }}">
@@ -54,11 +54,11 @@
                     {% else %}
                         <th>
                             <input  type="text"
-                                    class="{{ row.class |default('input-small') }} crud_form_field"
-                                    name="filter[{{ row.key }}][value]"
-                                    id="filter_{{ row.key }}"
-                                    value="{{ current_filter[row.key]['value'] | default('') }}"
-                            >
+                                        class="{{ row.class |default('input-small') }} crud_form_field"
+                                        name="filter[{{ row.key }}][value]"
+                                        id="filter_{{ row.key }}"
+                                        value="{{ current_filter[row.key]['value'] | default('') }}"
+                                >
                             <input  type="hidden"
                                     name="filter[{{ row.key }}][operator]"
                                     value="{{ row.filter_operator | default('=') }}"
@@ -70,7 +70,16 @@
                 {% endif %}
             {% endfor %}
             {% if has_row_actions %}
-                <th></th>
+                <th class='actions'>
+                    {% if searchable %}
+                        <a id="crud_search_button" class="btn btn-small btn-search">
+                            <span><i class="icon-search icon-white"></i></span>
+                        </a>
+                        <a id="crud_search_button" class="btn btn-small btn-reset">
+                            <span><i class="icon-remove icon-white"></i></span>
+                        </a>
+                    {% endif %}
+                </th>
             {% endif %}
         </tr>
     </form>

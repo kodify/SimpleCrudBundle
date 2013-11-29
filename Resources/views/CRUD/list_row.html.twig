@@ -34,7 +34,7 @@
         {% endif %}
     {% endfor %}
     {% if has_row_actions %}
-        <td>
+        <td class='actions'>
             {% for key, action_row in table_row_actions %}
                 {% include custom_action_button_renderer with {'key': key, 'action_row': action_row, 'index_key': index_key} %}
             {% endfor %}

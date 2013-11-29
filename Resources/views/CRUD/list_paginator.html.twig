@@ -5,8 +5,15 @@
         </div>
     </div>
     <div class="pull-right">
-        <div class="dataTables_paginate paging_bootstrap pagination">
+        <div class="dataTables_paginate paging_bootstrap pagination span8">
             <ul>
+                <li class='noborder'>
+                    <select id="crud_page_size" class="select_styled">
+                        {% for size in page_sizes %}
+                            <option value="{{ size }}" {% if current_page_size == size %}selected{%endif%}>{{ size }} {% trans %}records per page{% endtrans %}</option>
+                        {% endfor %}
+                    </select>
+                </li>
                 <li class="{% if paginator_prev < 0 %}disabled{% endif %}">
                     <a id="crud_prev_button" class="{% if paginator_prev >= 0 %}page_link{% endif %}" data-page="{{ paginator_prev }}">← {% trans %}Prev{% endtrans %}</a>
                 </li>
