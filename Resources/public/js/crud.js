@@ -56,18 +56,19 @@ $(document).ready(function () {
 
         $(this).hide();
         currentLink = $(this);
-
+        window.crudAjaxLoading = true;
         $.ajax({
             url: $(this).attr("href"),
             type: 'GET',
             cache: false,
             success: function (response) {
                 img.hide();
-                currentLink.show();
+                $(currentLink).show();
                 if (currentLink.data('success-callback-function')) {
                     rowId = currentLink.data('row-id');
                     window[currentLink.data('success-callback-function')](rowId, response, currentLink);
                 }
+                window.crudAjaxLoading = false;
             },
             error: function (response) {
                 img.hide();
@@ -76,7 +77,7 @@ $(document).ready(function () {
                     rowId = currentLink.data('row-id');
                     window[currentLink.data('error-callback-function')](rowId, response, currentLink);
                 }
-
+                window.crudAjaxLoading = false;
             }
         });
     });

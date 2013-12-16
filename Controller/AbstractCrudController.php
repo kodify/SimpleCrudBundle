@@ -250,13 +250,21 @@ abstract class AbstractCrudController extends Controller
         $rowActions = array();
 
         foreach ($actions as $action) {
-            $ico   = null;
-            $label = null;
+            $ico        = null;
+            $label      = null;
+            $cssClass   = null;
+            $successAction = null;
 
             if (is_array($action)) {
                 $ico    = (isset($action['ico']) ? $action['ico'] : '');
                 $label  = (isset($action['label']) ? $action['label'] : '');
-                $action = $action['route_name'];
+                if (isset($action['css_class'])) {
+                    $cssClass = $action['css_class'];
+                }
+                if (isset($action['success_action'])) {
+                    $successAction = $action['success_action'];
+                }
+                $actionRoute = $action['route_name'];
             } else {
                 switch ($action) {
                     case 'delete':
@@ -269,13 +277,16 @@ abstract class AbstractCrudController extends Controller
                         $ico = 'search';
                         break;
                 }
+                $actionRoute = $action;
             }
 
-            $route               = $action . '_' . $controllerName;
-            $rowActions[$action] = array(
-                'ico'   => $ico,
-                'label' => $label,
-                'url'   => $route
+            $route               = $actionRoute . '_' . $controllerName;
+            $rowActions[$actionRoute] = array(
+                'ico'           => $ico,
+                'label'         => $label,
+                'url'           => $route,
+                'css_class'     => $cssClass,
+                'success_action' => $successAction,
             );
         }
 
