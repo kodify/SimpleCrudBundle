@@ -245,6 +245,24 @@ abstract class AbstractCrudController extends Controller
         return $tableRows;
     }
 
+    private function getRowActionIco($action)
+    {
+        $ico = '';
+        switch ($action) {
+            case 'delete':
+                $ico = 'trash';
+                break;
+            case 'edit':
+                $ico = 'edit';
+                break;
+            case 'view':
+                $ico = 'search';
+                break;
+        }
+
+        return $ico;
+    }
+
     private function getRowActions($actions, $controllerName)
     {
         $rowActions = array();
@@ -266,18 +284,8 @@ abstract class AbstractCrudController extends Controller
                 }
                 $actionRoute = $action['route_name'];
             } else {
-                switch ($action) {
-                    case 'delete':
-                        $ico = 'trash';
-                        break;
-                    case 'edit':
-                        $ico = 'edit';
-                        break;
-                    case 'view':
-                        $ico = 'search';
-                        break;
-                }
-                $actionRoute = $action;
+                $ico            = $this->getRowActionIco($action);
+                $actionRoute    = $action;
             }
 
             $route               = $actionRoute . '_' . $controllerName;
