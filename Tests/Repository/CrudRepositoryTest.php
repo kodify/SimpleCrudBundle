@@ -138,7 +138,7 @@ class CrudRepository extends TestBaseClass
                     'params' => array(
                         array(
                             'name' => 'value_id',
-                            'value' => '10',
+                            'value' => array('10'),
                         )
                     )
                 )

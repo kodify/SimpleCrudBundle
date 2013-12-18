@@ -31,7 +31,7 @@ class FilterParserTest extends TestBaseClass
             array(
                 array(
                     'shouldReceive' => array('table.tableKey in (:value_tableKey)'),
-                    'parameters' => array(array('value_tableKey', 'filterValue'))
+                    'parameters' => array(array('value_tableKey', array('filterValue')))
                 ),
                 array('table.tableKey' => array('operator' => 'in', 'value' => 'filterValue'))
             ),
