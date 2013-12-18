@@ -1,0 +1,58 @@
+{% if has_mass_actions %}
+    <div class="clear"></div>
+    <div class="pull-left">
+        <form id="mass_action_form">
+            <label>
+                Mass Actions:
+                <input type="hidden" id="ma_selected_ids" name="ma_selected_ids" value="">
+                <input type="hidden" id="ma_current_url" name="ma_current_url" value="">
+                <select id="mass_action_select" onchange="javascript:execute_mass_action()">
+                    <option></option>
+                    {% for key, mass_action in mass_actions %}
+                        <option value="mass_action_{{ key }}">{{ mass_action.label }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+        </form>
+    </div>
+    <script>
+        var mass_actions = new Array();
+        {% for key, mass_action in mass_actions %}
+            mass_actions['{{ 'mass_action_' ~ key }}'] = '{{ mass_action.label }}';
+            mass_actions['{{ 'mass_action_' ~ key ~ '_url' }}'] = '{{ mass_action.path }}';
+        {% endfor %}
+        function execute_mass_action()
+        {
+            var mass_action_name    = mass_actions[$('#mass_action_select').val()];
+            var affected_rows       = '';
+            $("input[name='mass_action_cb[]']:checked").each( function () {
+                affected_rows = affected_rows + $(this).val() + ', ';
+            });
+
+            bootbox.dialog({
+                message: "Are you sure that you want to execute <b>" + mass_action_name + "</b> mass action? <br><br> <b>Selected rows:</b> <br>" + affected_rows,
+                title: "Mass actions",
+                buttons: {
+                    success: {
+                        label: "OK",
+                        className: "btn-primary",
+                        callback: function() {
+                            $('#ma_selected_ids').val(affected_rows);
+                            $('#ma_current_url').val($(location).attr('href'));
+                            $(location).attr('href');
+                            $('#mass_action_form').attr('action', mass_actions[$('#mass_action_select').val() + '_url']);
+                            $('#mass_action_form').submit();
+                        }
+                    },
+                    danger: {
+                        label: "Cancel",
+                        className: "btn-danger",
+                        callback: function() {
+                            $('#mass_action_select').val('');
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+{% endif %}

@@ -33,6 +33,13 @@
         jqTag.src = '{{ asset('bundles/kodifysimplecrud/js/bootstrap.min.js') }}';
         headTag.appendChild(jqTag);
     }
+    if(typeof window.bootbox=='undefined') {
+        var headTag = document.getElementsByTagName("head")[0];
+        var jqTag = document.createElement('script');
+        jqTag.type = 'text/javascript';
+        jqTag.src = '{{ asset('bundles/kodifysimplecrud/js/bootbox.js') }}';
+        headTag.appendChild(jqTag);
+    }
     </script>
     {%- javascripts
         '@KodifySimpleCrudBundle/Resources/public/js/crud.js'

@@ -1,6 +1,9 @@
 <thead>
     <form method="GET" id="crud_filter_form" action="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}">
         <tr class="header_row">
+            {% if has_mass_actions %}
+                <th></th>
+            {% endif %}
             {% for row in table_header %}
                 <th>
                     {% if row.sortable is defined and row.sortable  %}
@@ -41,6 +44,9 @@
         <tr class="filter">
             <input type="hidden" name="form[page_size]" id="crud_form_page_size" value="{{ current_page_size }}">
             <input type="hidden" name="form[current_page]" id="crud_form_current_page" value="{{ current_page }}">
+            {% if has_mass_actions %}
+                <th></th>
+            {% endif %}
             {% for row in table_header %}
                 {% if row.filterable is defined and row.filterable  %}
                     {% if row.options is defined %}

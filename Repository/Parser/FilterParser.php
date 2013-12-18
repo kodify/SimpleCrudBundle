@@ -38,6 +38,11 @@ class FilterParser
         switch ($defaultOperator) {
             case 'in':
             case 'not in':
+
+                if (!is_array($filter)) {
+                    $filter = array_map('trim', explode(',', $filter));
+                }
+
                 $query->andWhere($defaultEntity . '.'.$key.' '.$defaultOperator.' (:value_' . $key . ')')
                     ->setParameter('value_' . $key, $filter);
                 break;
@@ -51,6 +56,7 @@ class FilterParser
                 $query->andWhere("$defaultEntity.$key LIKE '%$filter%'");
                 break;
             default:
+                var_dump($defaultEntity . '.' . $key . ' ' . $defaultOperator . ' :value_' . $key);
                 $query->andWhere($defaultEntity . '.' . $key . ' ' . $defaultOperator . ' :value_' . $key)
                     ->setParameter('value_' . $key, $filter);
         }

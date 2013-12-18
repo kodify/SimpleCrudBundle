@@ -19,14 +19,15 @@ abstract class AbstractCrudController extends Controller
      * array with actions, possible values are delete, edit, view
      * @var array
      */
-    protected $generalActions = array();
-    protected $actions = array('edit');
-    protected $indexKey = null;
-    protected $controllerName = null;
-    protected $entityClass = null;
-    protected $formClassName = null;
-    protected $formLayout = 'KodifySimpleCrudBundle:CRUD:form.html.twig';
-    protected $listLayout = 'KodifySimpleCrudBundle:CRUD:list.html.twig';
+    protected $generalActions   = array();
+    protected $actions          = array('edit');
+    protected $massActions      = array('');
+    protected $indexKey         = null;
+    protected $controllerName   = null;
+    protected $entityClass      = null;
+    protected $formClassName    = null;
+    protected $formLayout       = 'KodifySimpleCrudBundle:CRUD:form.html.twig';
+    protected $listLayout       = 'KodifySimpleCrudBundle:CRUD:list.html.twig';
 
     protected $pageTitle = '';
 
@@ -157,6 +158,7 @@ abstract class AbstractCrudController extends Controller
             $currentSortField     = key($sort);
             $currentSortDirection = $sort[$currentSortField]['direction'];
         }
+        $massActions = $this->getMassActions();
 
         return array(
             'page_header'                   => $this->pageTitle,
@@ -186,7 +188,28 @@ abstract class AbstractCrudController extends Controller
             'page_sizes'                    => $this->getPageSizes(),
             'custom_row_class_renderer'     => $this->getcustom_row_class_renderer(),
             'custom_action_button_renderer' => $this->getcustom_action_button_renderer(),
+            'has_mass_actions'              => (count($massActions) > 0),
+            'mass_actions'                  => $massActions,
         );
+    }
+
+    private function getMassActions()
+    {
+        if (is_array($this->massActions) && !empty($this->massActions)) {
+            $massActionsRoutes = array();
+
+            foreach ($this->massActions as $massAction) {
+                $massActionURL = $this->container->get('router')->generate($massAction['route_name'] . '_' .$this->controllerName);
+                $massActionsRoutes[] = array(
+                    'label' => $massAction['label'],
+                    'path'  => $massActionURL,
+                );
+            }
+
+            return $massActionsRoutes;
+        }
+
+        return null;
     }
 
     private function getAddActionUrl($addAction, $controllerName)
