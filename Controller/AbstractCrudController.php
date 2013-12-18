@@ -21,7 +21,7 @@ abstract class AbstractCrudController extends Controller
      */
     protected $generalActions   = array();
     protected $actions          = array('edit');
-    protected $massActions      = array('');
+    protected $massActions      = array();
     protected $indexKey         = null;
     protected $controllerName   = null;
     protected $entityClass      = null;
