@@ -13,24 +13,37 @@
                     {% endfor %}
                 </select>
             </label>
+            <br>
+            <label>
+                <input type="checkbox" id="ma_apply_to_all"> Apply to {{ mass_actions_all_ids_count }} objects
+            </label>
         </form>
     </div>
     <script>
         var mass_actions = new Array();
+        var mass_actions_all_rows_id = '{{ mass_actions_all_ids }}';
         {% for key, mass_action in mass_actions %}
             mass_actions['{{ 'mass_action_' ~ key }}'] = '{{ mass_action.label }}';
             mass_actions['{{ 'mass_action_' ~ key ~ '_url' }}'] = '{{ mass_action.path }}';
         {% endfor %}
+
         function execute_mass_action()
         {
             var mass_action_name    = mass_actions[$('#mass_action_select').val()];
             var affected_rows       = '';
-            $("input[name='mass_action_cb[]']:checked").each( function () {
-                affected_rows = affected_rows + $(this).val() + ', ';
-            });
+            var alert_message       = "Are you sure that you want to execute <b>" + mass_action_name + "</b> mass action? <br><br>";
+            if ($('#ma_apply_to_all').prop('checked')) {
+                affected_rows = mass_actions_all_rows_id;
+                alert_message = alert_message + "<b>You are going to update {{ mass_actions_all_ids_count }} objects</b>"
+            } else {
+                $("input[name='mass_action_cb[]']:checked").each( function () {
+                    affected_rows = affected_rows + $(this).val() + ', ';
+                });
+                alert_message = alert_message + "<b>Selected rows:</b> <br>" + affected_rows
+            }
 
             bootbox.dialog({
-                message: "Are you sure that you want to execute <b>" + mass_action_name + "</b> mass action? <br><br> <b>Selected rows:</b> <br>" + affected_rows,
+                message: alert_message,
                 title: "Mass actions",
                 buttons: {
                     success: {

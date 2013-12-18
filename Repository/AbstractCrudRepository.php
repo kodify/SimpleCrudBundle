@@ -54,6 +54,22 @@ abstract class AbstractCrudRepository extends EntityRepository
         return $this->countQuery($query);
     }
 
+    public function getAllRowsId($filters = array())
+    {
+        $query = $this->createQueryBuilder('p')
+            ->select('partial p.{id}');
+
+        if (is_array($this->selectLeftJoin)) {
+            foreach ($this->selectLeftJoin as $join) {
+                $query->leftJoin($join['field'], $join['alias']);
+            }
+        }
+
+        Parser\FilterParser::parseFilters($filters, $query);
+
+        return $query->getQuery()->getArrayResult();
+    }
+
     /**
      * @codeCoverageIgnore
      */

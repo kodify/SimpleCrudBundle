@@ -158,7 +158,17 @@ abstract class AbstractCrudController extends Controller
             $currentSortField     = key($sort);
             $currentSortDirection = $sort[$currentSortField]['direction'];
         }
-        $massActions = $this->getMassActions();
+        $massActions        = $this->getMassActions();
+        $massActionAllIds   = '';
+        $massActionIdsCount = 0;
+        if (count($massActions) > 0) {
+            $tmpAllIds          = $this->getAllRowsId();
+            $massActionAllIds   = '';
+            $massActionIdsCount = count($tmpAllIds);
+            foreach ($tmpAllIds as $partialObject) {
+                $massActionAllIds .= $partialObject['id'] . ',';
+            }
+        }
 
         return array(
             'page_header'                   => $this->pageTitle,
@@ -190,6 +200,8 @@ abstract class AbstractCrudController extends Controller
             'custom_action_button_renderer' => $this->getcustom_action_button_renderer(),
             'has_mass_actions'              => (count($massActions) > 0),
             'mass_actions'                  => $massActions,
+            'mass_actions_all_ids'          => $massActionAllIds,
+            'mass_actions_all_ids_count'    => $massActionIdsCount,
         );
     }
 
@@ -462,6 +474,15 @@ abstract class AbstractCrudController extends Controller
         $repo = $this->getDoctrine()->getManager()->getRepository($this->entityClass);
 
         return $repo->getTotalRows(
+            $this->getUsedFilterFields()
+        );
+    }
+
+    public function getAllRowsId()
+    {
+        $repo = $this->getDoctrine()->getManager()->getRepository($this->entityClass);
+
+        return $repo->getAllRowsId(
             $this->getUsedFilterFields()
         );
     }

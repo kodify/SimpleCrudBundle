@@ -4,7 +4,7 @@
 <tr id="row{{ row[index_key] }}">
     {% endif %}
     {% if has_mass_actions %}
-        <th><input type="checkbox" name="mass_action_cb[]" value="{{ row[index_key] }}" checked> </th>
+        <th><input type="checkbox" id="ma_cb_{{ row[index_key] }}" name="mass_action_cb[]" value="{{ row[index_key] }}" checked> </th>
     {% endif %}
     {% set counter = 0 %}
     {% for key,value in row %}
