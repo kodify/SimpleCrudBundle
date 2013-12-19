@@ -8,31 +8,33 @@
     {% endif %}
     {% set counter = 0 %}
     {% for key,value in row %}
-        {% if key in sorted_row_indexes %}
-            <td class="cell_{{ key }}">
-                {% if table_header[counter] is defined and table_header[counter]['type'] is defined %}
-                    {% if table_header[counter]['type'] == 'boolean' %}
-                        <i class="icon-{{ value ? 'ok' : 'remove' }}"></i>
-                    {% elseif table_header[counter]['type'] == 'datetime' %}
-                        {% if table_header[counter]['datetime_format'] is defined %}
-                            {{ value|date(table_header[counter]['datetime_format']) }}
-                        {% else %}
-                            {{ value|date("m/d/Y") }}
+        {% if table_header[counter].type is not defined or table_header[counter].type != 'hidden' %}
+            {% if key in sorted_row_indexes %}
+                <td class="cell_{{ key }}">
+                    {% if table_header[counter] is defined and table_header[counter]['type'] is defined %}
+                        {% if table_header[counter]['type'] == 'boolean' %}
+                            <i class="icon-{{ value ? 'ok' : 'remove' }}"></i>
+                        {% elseif table_header[counter]['type'] == 'datetime' %}
+                            {% if table_header[counter]['datetime_format'] is defined %}
+                                {{ value|date(table_header[counter]['datetime_format']) }}
+                            {% else %}
+                                {{ value|date("m/d/Y") }}
+                            {% endif %}
+                        {% elseif table_header[counter]['type'] == 'options' %}
+                            {{ table_header[counter]['options'][value] }}
+                        {% elseif table_header[counter]['type'] == 'array' %}
+                            {% for array_value in value %}
+                                {{ array_value[table_header[counter]['array_key']] }} <br>
+                            {% endfor %}
                         {% endif %}
-                    {% elseif table_header[counter]['type'] == 'options' %}
-                        {{ table_header[counter]['options'][value] }}
-                    {% elseif table_header[counter]['type'] == 'array' %}
-                        {% for array_value in value %}
-                            {{ array_value[table_header[counter]['array_key']] }} <br>
-                        {% endfor %}
+                    {% elseif table_header[counter] is defined and table_header[counter]['custom_cell_renderer'] is defined %}
+                        {% include table_header[counter]['custom_cell_renderer'] with {'value': value} %}
+                    {% else %}
+                        {{ value }}
                     {% endif %}
-                {% elseif table_header[counter] is defined and table_header[counter]['custom_cell_renderer'] is defined %}
-                    {% include table_header[counter]['custom_cell_renderer'] with {'value': value} %}
-                {% else %}
-                    {{ value }}
-                {% endif %}
-            </td>
-            {% set counter = counter + 1 %}
+                </td>
+                {% set counter = counter + 1 %}
+            {% endif %}
         {% endif %}
     {% endfor %}
     {% if has_row_actions %}

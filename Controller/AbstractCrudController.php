@@ -161,10 +161,11 @@ abstract class AbstractCrudController extends Controller
         $massActions        = $this->getMassActions();
         $massActionAllIds   = '';
         $massActionIdsCount = 0;
-        if (count($massActions) > 0) {
+        if (count($massActions) > 0 && $this->massActionsApplyToAllPages($massActions)) {
             $tmpAllIds          = $this->getAllRowsId();
             $massActionAllIds   = '';
             $massActionIdsCount = count($tmpAllIds);
+
             foreach ($tmpAllIds as $partialObject) {
                 $massActionAllIds .= $partialObject['id'] . ',';
             }
@@ -203,6 +204,24 @@ abstract class AbstractCrudController extends Controller
             'mass_actions_all_ids'          => $massActionAllIds,
             'mass_actions_all_ids_count'    => $massActionIdsCount,
         );
+    }
+
+    private function massActionsApplyToAllPages()
+    {
+        if (is_array($this->massActions) && !empty($this->massActions)) {
+            $massActionsRoutes = array();
+
+            foreach ($this->massActions as $massAction) {
+                if (isset($massAction['apply_all']) && $massAction['apply_all']) {
+
+                    return true;
+                }
+            }
+
+            return $massActionsRoutes;
+        }
+
+        return false;
     }
 
     private function getMassActions()

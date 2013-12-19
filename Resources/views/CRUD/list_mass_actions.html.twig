@@ -13,10 +13,12 @@
                     {% endfor %}
                 </select>
             </label>
-            <br>
-            <label>
-                <input type="checkbox" id="ma_apply_to_all"> Apply to {{ mass_actions_all_ids_count }} objects
-            </label>
+            {% if mass_actions_all_ids_count > 0 %}
+                <br>
+                <label>
+                    <input type="checkbox" id="ma_apply_to_all"> Apply to all entities, {{ mass_actions_all_ids_count }} objects
+                </label>
+            {% endif %}
         </form>
     </div>
     <script>
