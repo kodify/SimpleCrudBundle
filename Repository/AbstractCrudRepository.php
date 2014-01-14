@@ -54,6 +54,9 @@ abstract class AbstractCrudRepository extends EntityRepository
         return $this->countQuery($query);
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getAllRowsId($filters = array())
     {
         $query = $this->createQueryBuilder('p')

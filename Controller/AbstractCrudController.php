@@ -497,6 +497,9 @@ abstract class AbstractCrudController extends Controller
         );
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function getAllRowsId()
     {
         $repo = $this->getDoctrine()->getManager()->getRepository($this->entityClass);
