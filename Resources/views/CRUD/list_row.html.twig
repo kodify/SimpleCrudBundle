@@ -16,9 +16,13 @@
                             <i class="icon-{{ value ? 'ok' : 'remove' }}"></i>
                         {% elseif table_header[counter]['type'] == 'datetime' %}
                             {% if table_header[counter]['datetime_format'] is defined %}
-                                {{ value|date(table_header[counter]['datetime_format']) }}
+                                {% if value is not empty %}
+                                    {{ value.timestamp|date(table_header[counter]['datetime_format']) }}
+                                {% endif %}
                             {% else %}
-                                {{ value|date("m/d/Y") }}
+                                {% if value is not empty %}
+                                    {{ value.timestamp|date("m/d/Y") }}
+                                {% endif %}
                             {% endif %}
                         {% elseif table_header[counter]['type'] == 'options' %}
                             {{ table_header[counter]['options'][value] }}
