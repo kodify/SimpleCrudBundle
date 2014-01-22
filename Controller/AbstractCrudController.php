@@ -259,7 +259,11 @@ abstract class AbstractCrudController extends Controller
     {
         $sortedIndexes = array();
         foreach ($tableHeader as $row) {
-            $sortedIndexes[] = $row['key'];
+            if (isset($row['alias'])) {
+                $sortedIndexes[] = $row['alias'];
+            } else {
+                $sortedIndexes[] = $row['key'];
+            }
         }
 
         return $sortedIndexes;
@@ -481,8 +485,29 @@ abstract class AbstractCrudController extends Controller
             $this->getUsedFilterFields(),
             $this->getPageSize(),
             $this->getCurrentPage(),
-            $this->getSort()
+            $this->getSort(),
+            null,
+            $this->getQueryFields()
         );
+    }
+
+    public function getQueryFields()
+    {
+        $headers    = $this->defineTableHeader();
+        $fields     = array();
+        foreach ($headers as $field) {
+            $strField = '';
+            if (isset($field['table'])) {
+                $strField = $field['table'] . '.';
+            }
+            $strField = $strField .$field['key'];
+            if (isset($field['alias'])) {
+                $strField .= ' as ' . $field['alias'];
+            }
+            $fields[] = $strField;
+        }
+
+        return $fields;
     }
 
     /**
@@ -493,7 +518,10 @@ abstract class AbstractCrudController extends Controller
         $repo = $this->getDoctrine()->getManager()->getRepository($this->entityClass);
 
         return $repo->getTotalRows(
-            $this->getUsedFilterFields()
+            $this->getUsedFilterFields(),
+            25,
+            0,
+            $this->getQueryFields()
         );
     }
 

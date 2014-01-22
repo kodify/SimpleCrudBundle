@@ -10,6 +10,7 @@ abstract class AbstractCrudRepository extends EntityRepository
 {
     protected $selectEntities = 'p';
     protected $selectLeftJoin = null;
+    protected $selectInnerJoin = null;
 
     public function __construct($em, ClassMetadata $class, $selectEntities = null, $selectLeftJoin = null)
     {
@@ -20,30 +21,42 @@ abstract class AbstractCrudRepository extends EntityRepository
         if ($selectEntities != null) {
             $this->selectEntities = $selectEntities;
         }
-
         if ($selectLeftJoin != null) {
             $this->selectLeftJoin = $selectLeftJoin;
         }
     }
 
-    public function getRows($filters = array(), $pageSize = 25, $currentPage = 0, $sort = null, $defaultSort = null)
+    public function getRows($filters = array(), $pageSize = 3, $currentPage = 0, $sort = null, $defaultSort = null, $fields = null)
     {
-        $query = $this->getQuery($filters, $pageSize, $currentPage, $sort, $defaultSort);
+        $query = $this->getQuery($filters, $pageSize, $currentPage, $sort, $defaultSort, $fields);
 
         return $query->getQuery()->getArrayResult();
     }
 
-    public function getTotalRows($filters = array(), $pageSize = 25, $currentPage = 0)
+    public function getTotalRows($filters = array(), $pageSize = 25, $currentPage = 0, $fields = null)
     {
-        if (is_array($this->selectLeftJoin)) {
+        $query = $this->createQueryBuilder('p');
+        if ($fields != null) {
+            $query->select('p, ' . implode(',', $fields));
+        } else {
+            $query->select($this->selectEntities);
+        }
 
-            $query = $this->createQueryBuilder('p')
-                ->select('p')
-                ->setMaxResults($pageSize)
+        if (is_array($this->selectLeftJoin)) {
+            $query->setMaxResults($pageSize)
                 ->setFirstResult($currentPage * $pageSize);
 
             foreach ($this->selectLeftJoin as $join) {
                 $query->leftJoin($join['field'], $join['alias']);
+            }
+
+            Parser\FilterParser::parseFilters($filters, $query);
+        } else if (is_array($this->selectInnerJoin)) {
+            $query->setMaxResults($pageSize)
+                ->setFirstResult($currentPage * $pageSize);
+
+            foreach ($this->selectInnerJoin as $join) {
+                $query->innerJoin($join['field'], $join['alias']);
             }
 
             Parser\FilterParser::parseFilters($filters, $query);
@@ -81,15 +94,21 @@ abstract class AbstractCrudRepository extends EntityRepository
         return count(new Paginator($query));
     }
 
-    public function getQuery($filters = array(), $pageSize = 25, $currentPage = 0, $sort = null, $defaultSort = null)
+    public function getQuery($filters = array(), $pageSize = 25, $currentPage = 0, $sort = null, $defaultSort = null, $fields = null)
     {
-
-        $query = $this->createQueryBuilder('p')
-            ->select($this->selectEntities);
+        $query = $this->createQueryBuilder('p');
+        if ($fields != null) {
+            $query->select(implode(',', $fields));
+        } else {
+            $query->select($this->selectEntities);
+        }
 
         if (is_array($this->selectLeftJoin)) {
             $this->getQueryForSelectLeftJoin($filters, $pageSize, $currentPage, $sort, $defaultSort, $query);
         } else {
+            if(is_array($this->selectInnerJoin)) {
+                $this->getQueryForSelectInnerJoin($filters, $pageSize, $currentPage, $sort, $defaultSort, $query);
+            }
             $query->setMaxResults($pageSize)
                 ->setFirstResult($currentPage * $pageSize);
 
@@ -103,12 +122,16 @@ abstract class AbstractCrudRepository extends EntityRepository
 
     /**
      * @codeCoverageIgnore
-     * @param $filters
-     * @param $pageSize
-     * @param $currentPage
-     * @param $sort
-     * @param $defaultSort
-     * @param $query
+     */
+    protected function getQueryForSelectInnerJoin($filters, $pageSize, $currentPage, $sort, $defaultSort, $query)
+    {
+        foreach ($this->selectInnerJoin as $join) {
+            $query->innerJoin($join['field'], $join['alias']);
+        }
+    }
+
+    /**
+     * @codeCoverageIgnore
      */
     protected function getQueryForSelectLeftJoin($filters, $pageSize, $currentPage, $sort, $defaultSort, $query)
     {
