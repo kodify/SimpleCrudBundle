@@ -11,6 +11,7 @@ abstract class AbstractCrudRepository extends EntityRepository
     protected $selectEntities = 'p';
     protected $selectLeftJoin = null;
     protected $selectInnerJoin = null;
+    protected $useFieldsToSelect = false;
 
     public function __construct($em, ClassMetadata $class, $selectEntities = null, $selectLeftJoin = null)
     {
@@ -36,7 +37,7 @@ abstract class AbstractCrudRepository extends EntityRepository
     public function getTotalRows($filters = array(), $pageSize = 25, $currentPage = 0, $fields = null)
     {
         $query = $this->createQueryBuilder('p');
-        if ($fields != null) {
+        if ($fields != null && $this->useFieldsToSelect) {
             $query->select('p, ' . implode(',', $fields));
         } else {
             $query->select($this->selectEntities);
@@ -97,7 +98,7 @@ abstract class AbstractCrudRepository extends EntityRepository
     public function getQuery($filters = array(), $pageSize = 25, $currentPage = 0, $sort = null, $defaultSort = null, $fields = null)
     {
         $query = $this->createQueryBuilder('p');
-        if ($fields != null) {
+        if ($fields != null && $this->useFieldsToSelect) {
             $query->select(implode(',', $fields));
         } else {
             $query->select($this->selectEntities);
