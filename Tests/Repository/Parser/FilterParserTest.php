@@ -16,15 +16,15 @@ class FilterParserTest extends TestBaseClass
         return array(
             array(
                 array(
-                    'shouldReceive' => array('p.key = :value_key'),
-                    'parameters' => array(array('value_key', 'filter'))
+                    'shouldReceive' => array('p.key = :value_key' . md5('=')),
+                    'parameters' => array(array('value_key' . md5('='), 'filter'))
                 ),
                 array('key' => 'filter')
             ),
             array(
                 array(
-                    'shouldReceive' => array('table.tableKey = :value_tableKey'),
-                    'parameters' => array(array('value_tableKey', 'filter'))
+                    'shouldReceive' => array('table.tableKey = :value_tableKey' . md5('=')),
+                    'parameters' => array(array('value_tableKey' . md5('='), 'filter'))
                 ),
                 array('table.tableKey' => 'filter')
             ),
@@ -55,6 +55,23 @@ class FilterParserTest extends TestBaseClass
                     'parameters' => array()
                 ),
                 array('table.tableKey' => array('operator' => 'full_like', 'value' => 'filterValue'))
+            ),
+            array(
+                array(
+                    'shouldReceive' => array(
+                        'p.key = :value_key' . md5('='),
+                        'p.key != :value_key' . md5('!='),
+                    ),
+                    'parameters' => array(
+                        array('value_key' . md5('='), '1'),
+                        array('value_key' . md5('!='), '2')
+                    )
+                ),
+                array('key' => array(array('value' => '1', 'operator' => '='), array('value' => '2', 'operator' => '!=')))
+            ),
+            array(
+                array(),
+                array(array())
             )
         );
     }
@@ -65,12 +82,53 @@ class FilterParserTest extends TestBaseClass
     public function testParseFilters($expected, $input)
     {
         $queryMock = M::mock();
-        foreach ($expected['shouldReceive'] as $should) {
-            $queryMock->shouldReceive('andWhere')->with($should)->once()->andReturn($queryMock);
+        if (isset($expected['shouldReceive'])) {
+            foreach ($expected['shouldReceive'] as $should) {
+                $queryMock->shouldReceive('andWhere')->with($should)->once()->andReturn($queryMock);
+            }
         }
-        foreach ($expected['parameters'] as $parameter) {
-            $queryMock->shouldReceive('setParameter')->with($parameter[0], $parameter[1])->once();
+        if (isset($expected['parameters'])) {
+            foreach ($expected['parameters'] as $parameter) {
+              $queryMock->shouldReceive('setParameter')->with($parameter[0], $parameter[1])->once();
+            }
         }
+
+        FilterParser::parseFilters($input, $queryMock);
+    }
+
+
+    public function testDataProviderIsNull()
+    {
+        return array(
+            array(
+                array(
+                    'parameter' => 'filterValue',
+                    'operator'  => 'isNull'
+                ),
+                array('table.tableKey' => array('operator' => 'is null', 'value' => 'filterValue'))
+            ),
+            array(
+                array(
+                    'parameter' => 'filterValue',
+                    'operator'  => 'isNotNull'
+                ),
+                array('table.tableKey' => array('operator' => 'is not null', 'value' => 'filterValue'))
+            ),
+        );
+    }
+    /**
+     * @dataProvider testDataProviderIsNull
+     */
+    public function testParseFiltersIsNULL($expected, $input)
+    {
+        $queryMock = M::mock();
+
+        $exprMock = M::mock();
+        $exprMock->shouldReceive($expected['operator'])->with()->once()->andReturn($exprMock);
+
+        $queryMock->shouldReceive('expr')->once()->andReturn($exprMock);
+        $queryMock->shouldReceive('andWhere')->with($exprMock)->once();
+
 
         FilterParser::parseFilters($input, $queryMock);
     }
