@@ -106,12 +106,12 @@ abstract class AbstractCrudRepository extends EntityRepository
             try {
                 $data =  $countQuery->getScalarResult();
                 $data = array_map('current', $data);
-                $this->count = array_sum($data);
-            } catch(NoResultException $e) {
-                $this->count = 0;
+                $count = array_sum($data);
+            } catch (NoResultException $e) {
+                $count = 0;
             }
 
-            return $this->count;
+            return $count;
         }
     }
 
