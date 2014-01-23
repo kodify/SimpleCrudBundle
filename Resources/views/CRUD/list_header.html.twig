@@ -52,11 +52,18 @@
             {% for row in table_header %}
                 {% if row.type is not defined or row.type != 'hidden' %}
                     {% if row.filterable is defined and row.filterable  %}
+                        {% set filterId = row.key %}
+                        {% if row.alias is defined %}
+                            {% set filterId = row.alias %}
+                        {% endif  %}
                         {% if row.options is defined %}
-                            <th><select class="{{ row.class |default('input-small') }}" name="filter[{{ row.key }}]" id="filter_{{ row.key }}">
+                            <th><select class="{{ row.class |default('input-small') }}" name="filter[{{ filterId }}]" id="filter_{{ filterId }}">
                                 <option value=""></option>
                                 {% for optionKey,option in row.options %}
-                                    {% set curFil = current_filter[row.key] | default("")  %}
+                                    {% set curFil = current_filter[filterId] | default("")  %}
+                                    {% if current_filter[filterId] is defined and current_filter[filterId] is iterable %}
+                                        {% set curFil = current_filter[filterId]['value'] | default("")  %}
+                                    {% endif %}
                                     <option value="{{ optionKey }}" {% if curFil != "" and curFil == optionKey %}selected{% endif %}>{{ option }}</option>
                                 {% endfor %}
                             </select></th>
@@ -64,12 +71,12 @@
                             <th>
                                 <input  type="text"
                                         class="{{ row.class |default('input-small') }} crud_form_field"
-                                        name="filter[{{ row.key }}][value]"
-                                        id="filter_{{ row.key }}"
-                                        value="{{ current_filter[row.key]['value'] | default('') }}"
+                                        name="filter[{{ filterId }}][value]"
+                                        id="filter_{{ filterId }}"
+                                        value="{{ current_filter[filterId]['value'] | default('') }}"
                                 >
                                 <input  type="hidden"
-                                        name="filter[{{ row.key }}][operator]"
+                                        name="filter[{{ filterId }}][operator]"
                                         value="{{ row.filter_operator | default('=') }}"
                                 >
                             </th>
