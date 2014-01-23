@@ -5,13 +5,18 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\QueryBuilder,
+    Doctrine\ORM\Query,
+    Doctrine\ORM\Query\ResultSetMapping,
+    Doctrine\ORM\NoResultException;
 
 abstract class AbstractCrudRepository extends EntityRepository
 {
-    protected $selectEntities = 'p';
-    protected $selectLeftJoin = null;
-    protected $selectInnerJoin = null;
-    protected $useFieldsToSelect = false;
+    protected $selectEntities       = 'p';
+    protected $selectLeftJoin       = null;
+    protected $selectInnerJoin      = null;
+    protected $useFieldsToSelect    = false;
+    protected $useCustomCounter     = false;
 
     public function __construct($em, ClassMetadata $class, $selectEntities = null, $selectLeftJoin = null)
     {
@@ -92,7 +97,22 @@ abstract class AbstractCrudRepository extends EntityRepository
      */
     public function countQuery($query)
     {
-        return count(new Paginator($query));
+        if (!$this->useCustomCounter) {
+            return count(new Paginator($query));
+        } else {
+            $countQuery = $this->cloneQuery($query->getQuery());
+            $countQuery->setHint(Query::HINT_CUSTOM_TREE_WALKERS, array('Doctrine\ORM\Tools\Pagination\CountWalker'));
+
+            try {
+                $data =  $countQuery->getScalarResult();
+                $data = array_map('current', $data);
+                $this->count = array_sum($data);
+            } catch(NoResultException $e) {
+                $this->count = 0;
+            }
+
+            return $this->count;
+        }
     }
 
     public function getQuery($filters = array(), $pageSize = 25, $currentPage = 0, $sort = null, $defaultSort = null, $fields = null)
@@ -119,6 +139,21 @@ abstract class AbstractCrudRepository extends EntityRepository
         Parser\SortParser::parseSort($sort, $defaultSort, $query);
 
         return $query;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    private function cloneQuery(Query $query)
+    {
+        $cloneQuery = clone $query;
+        $cloneQuery->setParameters(clone $query->getParameters());
+
+        foreach ($query->getHints() as $name => $value) {
+            $cloneQuery->setHint($name, $value);
+        }
+
+        return $cloneQuery;
     }
 
     /**
