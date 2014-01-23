@@ -107,7 +107,7 @@ abstract class AbstractCrudRepository extends EntityRepository
         if (is_array($this->selectLeftJoin)) {
             $this->getQueryForSelectLeftJoin($filters, $pageSize, $currentPage, $sort, $defaultSort, $query);
         } else {
-            if(is_array($this->selectInnerJoin)) {
+            if (is_array($this->selectInnerJoin)) {
                 $this->getQueryForSelectInnerJoin($filters, $pageSize, $currentPage, $sort, $defaultSort, $query);
             }
             $query->setMaxResults($pageSize)

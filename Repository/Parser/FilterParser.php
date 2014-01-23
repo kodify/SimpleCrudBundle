@@ -7,7 +7,6 @@ class FilterParser
     {
         if (!empty($filters)) {
             foreach ($filters as $key => $filter) {
-
                 if (self::isValidItemToFilter($filter)) {
                     self::addFilter($filter, $query, $key);
                 }

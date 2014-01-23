@@ -36,7 +36,6 @@ abstract class AbstractCrudController extends Controller
      */
     public function addAction(Request $request, $destinationUrl = null)
     {
-
         $formClass = $this->getEntityForm();
         $obj       = $this->getEntityFromRequest($formClass);
         $form      = $this->createForm($formClass, $obj);
