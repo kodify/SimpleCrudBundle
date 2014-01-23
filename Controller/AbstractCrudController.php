@@ -424,9 +424,14 @@ abstract class AbstractCrudController extends Controller
         return $currentPage;
     }
 
-    protected function getUsedFilterFields()
+    protected function getUsedFilterFields($view = true)
     {
-        return $this->get('request')->get('filter');
+        $filters = $this->get('request')->get('filter');
+        if (!$view) {
+            $filters = $this->processAlias($filters);
+        }
+
+        return $filters;
     }
 
     /**
@@ -482,7 +487,7 @@ abstract class AbstractCrudController extends Controller
         $repo = $this->getDoctrine()->getManager()->getRepository($this->entityClass);
 
         return $repo->getRows(
-            $this->getUsedFilterFields(),
+            $this->getUsedFilterFields(false),
             $this->getPageSize(),
             $this->getCurrentPage(),
             $this->getSort(),
@@ -518,11 +523,29 @@ abstract class AbstractCrudController extends Controller
         $repo = $this->getDoctrine()->getManager()->getRepository($this->entityClass);
 
         return $repo->getTotalRows(
-            $this->getUsedFilterFields(),
+            $this->getUsedFilterFields(false),
             25,
             0,
             $this->getQueryFields()
         );
+    }
+
+    protected function processAlias($filters)
+    {
+        $tableHeader = $this->defineTableHeader();
+        if (is_array($filters)) {
+            foreach ($filters as $field => $filter) {
+                foreach ($tableHeader as $row) {
+                    if (isset($row['alias']) && $row['alias'] == $field) {
+                        $filters[$row['key']] = $filters[$field];
+                        unset($filters[$field]);
+                        continue;
+                    }
+                }
+            }
+        }
+
+        return $filters;
     }
 
     /**
