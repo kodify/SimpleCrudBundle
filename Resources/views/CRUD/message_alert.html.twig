@@ -5,25 +5,25 @@
                 <div class="alert alert-block alert-error">
                      <a class="close" data-dismiss="alert" href="#">X</a>
                     <strong>Error:</strong> <br>
-                    {{  app.session.flashbag.get('error')|join }}
+                    {{  app.session.flashbag.get('error')|join('<br>')|raw }}
                 </div>
             {% endif %}
             {% if app.session.flashbag.has('success') %}
                 <div class="alert alert-block alert-success">
                      <a class="close" data-dismiss="alert" href="#">X</a>
-                    <strong>{% trans %}Success{% endtrans %}:</strong> {{ app.session.flashbag.get('success')|join }}
+                    <strong>{% trans %}Success{% endtrans %}:</strong> {{ app.session.flashbag.get('success')|join('<br>')|raw }}
                 </div>
             {% endif %}
             {% if app.session.flashbag.has('info') %}
                 <div class="alert alert-block alert-info">
                      <a class="close" data-dismiss="alert" href="#">X</a>
-                     <strong>{% trans %}Info{% endtrans %}:</strong> {{ app.session.flashbag.get('info')|join }}
+                     <strong>{% trans %}Info{% endtrans %}:</strong> {{ app.session.flashbag.get('info')|join('<br>')|raw }}
                 </div>
             {% endif %}
             {% if app.session.flashbag.has('warning') %}
                 <div class="alert alert-warning alert-info">
                      <a class="close" data-dismiss="alert" href="#">X</a>
-                     <strong>{% trans %}Warning{% endtrans %}:</strong> {{ app.session.flashbag.get('warning')|join }}
+                     <strong>{% trans %}Warning{% endtrans %}:</strong> {{ app.session.flashbag.get('warning')|join('<br>')|raw }}
                 </div>
             {% endif %}
         </div>
