@@ -79,6 +79,9 @@
                                         name="filter[{{ filterId }}][operator]"
                                         value="{{ row.filter_operator | default('=') }}"
                                 >
+                                {% if row.filter_add_filter is defined %}
+                                    <input  type="hidden" name="filter[{{ filterId }}][add_filter]" value="{{ row.filter_add_filter | default('') }}">
+                                {% endif %}
                             </th>
                         {% endif %}
                     {% else %}

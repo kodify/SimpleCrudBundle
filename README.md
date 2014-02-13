@@ -140,6 +140,7 @@ Controller
                     'key' => 'originalName',
                     'filter_operator' => 'RIGHT_LIKE', // LEFT_LIKE '%term', FULL_LIKE '%term%', RIGHT_LIKE 'term%', IN, NOT IN, =, !=, >=... by default =
                     'custom_cell_renderer' => 'AcmeBundle:Comment/Crud:row_original_filename_renderer.html.twig' //Custom cell renderer
+                    'filter_add_filter' => 'status' // key of another field to search also in the other field
                 ),
                 array(
                     'label' => 'Status',
