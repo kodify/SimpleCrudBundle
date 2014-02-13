@@ -22,7 +22,7 @@ class FilterParser
         return $query;
     }
 
-    private static function addFilter($filter, $query, $key)
+    protected static function addFilter($filter, $query, $key)
     {
         $defaultOperator = '=';
         $defaultEntity = 'p';
@@ -71,7 +71,7 @@ class FilterParser
         }
     }
 
-    private static function isValidItemToFilter($filter)
+    protected static function isValidItemToFilter($filter)
     {
         if (is_array($filter) && empty($filter['value'])) {
             foreach ($filter as $subFilter) {
