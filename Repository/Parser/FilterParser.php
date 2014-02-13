@@ -14,6 +14,10 @@ class FilterParser
                         }
                     } else {
                         self::addFilter($filter, $query, $key);
+
+                        if (isset($filter['add_filter'])) {
+                            self::orFilter($filter, $query, $filter['add_filter']);
+                        }
                     }
                 }
             }
@@ -67,6 +71,55 @@ class FilterParser
                 break;
             default:
                 $query->andWhere($defaultEntity . '.' . $key . ' ' . $defaultOperator . ' :value_' . $key . md5($defaultOperator))
+                    ->setParameter('value_' . $key  . md5($defaultOperator), $filter);
+        }
+    }
+
+    protected static function orFilter($filter, $query, $key)
+    {
+        $defaultOperator = '=';
+        $defaultEntity = 'p';
+
+        if (is_array($filter)) {
+            $defaultOperator = $filter['operator'];
+            $filter = $filter['value'];
+        }
+
+        $defaultOperator = strtolower($defaultOperator);
+
+        if (strpos($key, '.') > 0) {
+            $tmp = explode('.', $key);
+            $defaultEntity = $tmp[0];
+            $key = $tmp[1];
+        }
+
+        switch ($defaultOperator) {
+            case 'in':
+            case 'not in':
+                if (!is_array($filter)) {
+                    $filter = array_map('trim', explode(',', $filter));
+                }
+
+                $query->orWhere($defaultEntity . '.'.$key.' '.$defaultOperator.' (:value_' . $key . ')')
+                    ->setParameter('value_' . $key, $filter);
+                break;
+            case 'left_like':
+                $query->orWhere("$defaultEntity.$key LIKE '%$filter'");
+                break;
+            case 'right_like':
+                $query->orWhere("$defaultEntity.$key LIKE '$filter%'");
+                break;
+            case 'full_like':
+                $query->orWhere("$defaultEntity.$key LIKE '%$filter%'");
+                break;
+            case 'is null':
+                $query->orWhere($query->expr()->isNull('VideoWebsite.scheduledFor'));
+                break;
+            case 'is not null':
+                $query->orWhere($query->expr()->isNotNull('VideoWebsite.scheduledFor'));
+                break;
+            default:
+                $query->orWhere($defaultEntity . '.' . $key . ' ' . $defaultOperator . ' :value_' . $key . md5($defaultOperator))
                     ->setParameter('value_' . $key  . md5($defaultOperator), $filter);
         }
     }
