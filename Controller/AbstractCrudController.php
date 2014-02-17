@@ -258,11 +258,14 @@ abstract class AbstractCrudController extends Controller
     private function getHeaderIndexes($tableHeader)
     {
         $sortedIndexes = array();
+
         foreach ($tableHeader as $row) {
             if (isset($row['alias'])) {
                 $sortedIndexes[] = $row['alias'];
             } else {
-                $sortedIndexes[] = $row['key'];
+                if (isset($row['key'])) {
+                    $sortedIndexes[] = $row['key'];
+                }
             }
         }
 
@@ -505,7 +508,9 @@ abstract class AbstractCrudController extends Controller
             if (isset($field['table'])) {
                 $strField = $field['table'] . '.';
             }
-            $strField = $strField .$field['key'];
+            if (isset($row['key'])) {
+                $strField .= $field['key'];
+            }
             if (isset($field['alias'])) {
                 $strField .= ' as ' . $field['alias'];
             }
