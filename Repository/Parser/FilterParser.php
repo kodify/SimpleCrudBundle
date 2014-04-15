@@ -55,13 +55,13 @@ class FilterParser
                     ->setParameter('value_' . $key, $filter);
                 break;
             case 'left_like':
-                $query->andWhere("$defaultEntity.$key LIKE '%$filter'");
+                $query->andWhere("$defaultEntity.$key LIKE :term_$key")->setParameter("term_$key", '%'.$filter);
                 break;
             case 'right_like':
-                $query->andWhere("$defaultEntity.$key LIKE '$filter%'");
+                $query->andWhere("$defaultEntity.$key LIKE :term_$key")->setParameter("term_$key", $filter . '%');
                 break;
             case 'full_like':
-                $query->andWhere("$defaultEntity.$key LIKE '%$filter%'");
+                $query->andWhere("$defaultEntity.$key LIKE :term_$key")->setParameter("term_$key", '%' . $filter . '%');
                 break;
             case 'is null':
                 $query->andWhere($query->expr()->isNull('VideoWebsite.scheduledFor'));
