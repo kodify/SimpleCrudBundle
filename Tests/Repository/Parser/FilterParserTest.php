@@ -37,22 +37,22 @@ class FilterParserTest extends TestBaseClass
             ),
             array(
                 array(
-                    'shouldReceive' => array('table.tableKey LIKE \'%filterValue\''),
-                    'parameters' => array()
+                    'shouldReceive' => array('table.tableKey LIKE :term_tableKey'),
+                    'parameters' => array(['term_tableKey', '%filterValue'])
                 ),
                 array('table.tableKey' => array('operator' => 'left_like', 'value' => 'filterValue'))
             ),
             array(
                 array(
-                    'shouldReceive' => array('table.tableKey LIKE \'filterValue%\''),
-                    'parameters' => array()
+                    'shouldReceive' => array('table.tableKey LIKE :term_tableKey'),
+                    'parameters' => array(['term_tableKey', 'filterValue%'])
                 ),
                 array('table.tableKey' => array('operator' => 'right_like', 'value' => 'filterValue'))
             ),
             array(
                 array(
-                    'shouldReceive' => array('table.tableKey LIKE \'%filterValue%\''),
-                    'parameters' => array()
+                    'shouldReceive' => array('table.tableKey LIKE :term_tableKey'),
+                    'parameters' => array(['term_tableKey', '%filterValue%'])
                 ),
                 array('table.tableKey' => array('operator' => 'full_like', 'value' => 'filterValue'))
             ),

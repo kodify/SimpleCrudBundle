@@ -148,9 +148,15 @@ class CrudRepository extends TestBaseClass
                 array(
                     'qty' => 1,
                     'where' => array(
-                        "p.id LIKE '%test'"
+                        "p.id LIKE :term_id"
                     ),
-                    'params_qty' => 0
+                    'params_qty' => 1,
+                    'params' => array(
+                        array(
+                            'name' => 'term_id',
+                            'value' => "%test",
+                        )
+                    )
                 )
             ),
             array(
@@ -158,9 +164,15 @@ class CrudRepository extends TestBaseClass
                 array(
                     'qty' => 1,
                     'where' => array(
-                        "p.id LIKE 'test%'"
+                        "p.id LIKE :term_id"
                     ),
-                    'params_qty' => 0
+                    'params_qty' => 1,
+                    'params' => array(
+                        array(
+                            'name' => 'term_id',
+                            'value' => "test%",
+                        )
+                    )
                 )
             ),
             array(
@@ -168,9 +180,15 @@ class CrudRepository extends TestBaseClass
                 array(
                     'qty' => 1,
                     'where' => array(
-                        "p.id LIKE '%test%'"
+                        "p.id LIKE :term_id"
                     ),
-                    'params_qty' => 0
+                    'params_qty' => 1,
+                    'params' => array(
+                        array(
+                            'name' => 'term_id',
+                            'value' => "%test%",
+                        )
+                    )
                 )
             ),
             array(
@@ -182,11 +200,25 @@ class CrudRepository extends TestBaseClass
                 array(
                     'qty' => 3,
                     'where' => array(
-                        "p.id1 LIKE '%test1'",
-                        "p.id2 LIKE 'test2%'",
-                        "p.id3 LIKE '%test3%'"
+                        "p.id1 LIKE :term_id1",
+                        "p.id2 LIKE :term_id2",
+                        "p.id3 LIKE :term_id3",
                     ),
-                    'params_qty' => 0
+                    'params_qty' => 3,
+                    'params' => array(
+                        array(
+                            'name' => 'term_id1',
+                            'value' => "%test1",
+                        ),
+                        array(
+                            'name' => 'term_id2',
+                            'value' => "test2%",
+                        ),
+                        array(
+                            'name' => 'term_id3',
+                            'value' => "%test3%",
+                        ),
+                    )
                 )
             ),
         );
