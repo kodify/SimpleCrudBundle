@@ -43,7 +43,7 @@ abstract class AbstractCrudController extends Controller
         if ($request->isMethod('POST')) {
             $form->bind($request);
 
-            if ($form->isValid()) {
+            if ($this->validateForm($form, $obj)) {
 
                 try {
                     $this->prePersist($obj);
@@ -80,6 +80,11 @@ abstract class AbstractCrudController extends Controller
                 'form_destination' => $destinationUrl,
             )
         );
+    }
+
+    protected function validateForm($form)
+    {
+        return $form->isValid();
     }
 
     /**
