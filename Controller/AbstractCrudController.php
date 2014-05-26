@@ -72,6 +72,7 @@ abstract class AbstractCrudController extends Controller
         return $this->render(
             $this->formLayout,
             array(
+                'ajax_request'     => $request->isXmlHttpRequest(),
                 'cancel_url'       => $this->postAddRedirectTo(),
                 'form'             => $form->createView(),
                 'new_object'       => ($obj->getId() == null),
