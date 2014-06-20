@@ -52,8 +52,10 @@ abstract class AbstractCrudRepository extends EntityRepository
             $query->setMaxResults($pageSize)
                 ->setFirstResult($currentPage * $pageSize);
 
-            foreach ($this->selectInnerJoin as $join) {
-                $query->innerJoin($join['field'], $join['alias']);
+            if (is_array($this->selectInnerJoin)) {
+                foreach ($this->selectInnerJoin as $join) {
+                    $query->innerJoin($join['field'], $join['alias']);
+                }
             }
 
             foreach ($this->selectLeftJoin as $join) {
