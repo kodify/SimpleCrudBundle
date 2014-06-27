@@ -52,6 +52,12 @@ abstract class AbstractCrudRepository extends EntityRepository
             $query->setMaxResults($pageSize)
                 ->setFirstResult($currentPage * $pageSize);
 
+            if (is_array($this->selectInnerJoin)) {
+                foreach ($this->selectInnerJoin as $join) {
+                    $query->innerJoin($join['field'], $join['alias']);
+                }
+            }
+
             foreach ($this->selectLeftJoin as $join) {
                 $query->leftJoin($join['field'], $join['alias']);
             }
@@ -126,6 +132,7 @@ abstract class AbstractCrudRepository extends EntityRepository
 
         if (is_array($this->selectLeftJoin)) {
             $this->getQueryForSelectLeftJoin($filters, $pageSize, $currentPage, $sort, $defaultSort, $query);
+            Parser\FilterParser::parseFilters($filters, $query);
         } else {
             if (is_array($this->selectInnerJoin)) {
                 $this->getQueryForSelectInnerJoin($filters, $pageSize, $currentPage, $sort, $defaultSort, $query);
@@ -176,6 +183,11 @@ abstract class AbstractCrudRepository extends EntityRepository
             ->select('p.' . $identifiers[0])
             ->setMaxResults($pageSize)
             ->setFirstResult($currentPage * $pageSize);
+
+        foreach ($this->selectInnerJoin as $join) {
+            $query->innerJoin($join['field'], $join['alias']);
+            $queryToRetrieveIds->innerJoin($join['field'], $join['alias']);
+        }
 
         foreach ($this->selectLeftJoin as $join) {
             $query->leftJoin($join['field'], $join['alias']);
