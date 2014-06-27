@@ -260,7 +260,7 @@ abstract class AbstractCrudController extends Controller
         return $addActionUrl;
     }
 
-    private function getHeaderIndexes($tableHeader)
+    protected function getHeaderIndexes($tableHeader)
     {
         $sortedIndexes = array();
 
@@ -329,7 +329,7 @@ abstract class AbstractCrudController extends Controller
         return $ico;
     }
 
-    private function getRowActions($actions, $controllerName)
+    protected function getRowActions($actions, $controllerName)
     {
         $rowActions = array();
 
