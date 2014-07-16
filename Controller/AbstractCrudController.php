@@ -30,6 +30,7 @@ abstract class AbstractCrudController extends Controller
     protected $listLayout       = 'KodifySimpleCrudBundle:CRUD:list.html.twig';
 
     protected $pageTitle = '';
+    protected $obj = null;
 
     /**
      * @return \Symfony\Component\HttpFoundation\Response
@@ -53,11 +54,11 @@ abstract class AbstractCrudController extends Controller
                     if ($this->flashMessages) {
                         $this->get('session')->getFlashBag()->add('success', $formClass->getName() . ' updated successfully');
                     }
+                    $this->obj = $obj;
 
                     return $this->redirect($this->postAddRedirectTo());
                 } catch (\Exception $e) {
                     $this->get('logger')->err($e);
-
                     $this->get('session')->getFlashBag()->add('error', 'Error saving ' . $formClass->getName());
                 }
             } else {
