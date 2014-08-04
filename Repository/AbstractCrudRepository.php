@@ -41,11 +41,9 @@ abstract class AbstractCrudRepository extends EntityRepository
 
     public function getTotalRows($filters = array(), $pageSize = 25, $currentPage = 0, $fields = null)
     {
-        $identifiers = ($this->getClassMetadata()->getIdentifier());
         $query = $this->createQueryBuilder('p');
         if ($fields != null && $this->useFieldsToSelect) {
-//            $query->select('p, ' . implode(',', $fields));
-            $query->select('p.' . $identifiers[0]);
+            $query->select('p, ' . implode(',', $fields));
         } else {
             $query->select($this->selectEntities);
         }
@@ -77,8 +75,6 @@ abstract class AbstractCrudRepository extends EntityRepository
         } else {
             $query = $this->getQuery($filters, $pageSize, $currentPage);
         }
-
-//        $query->groupBy('p.' . $identifiers[0]);
 
         return $this->countQuery($query);
     }
