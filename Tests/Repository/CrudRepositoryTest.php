@@ -257,8 +257,10 @@ class CrudRepository extends TestBaseClass
             )
         );
 
-        $repo->shouldReceive('countQuery')->with('query')->once()->andReturn(10);
-        $repo->shouldReceive('getQuery')->once()->andReturn('query');
+        $mockQueryBuilder =  M::mock();
+
+        $repo->shouldReceive('countQuery')->with($mockQueryBuilder)->once()->andReturn(10);
+        $repo->shouldReceive('getQuery')->once()->andReturn($mockQueryBuilder);
 
         $result = $repo->getTotalRows(array(), 99, 10);
         $this->assertEquals(10, $result);

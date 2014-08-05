@@ -132,16 +132,18 @@ abstract class AbstractCrudRepository extends EntityRepository
 
         if (is_array($this->selectLeftJoin)) {
             $this->getQueryForSelectLeftJoin($filters, $pageSize, $currentPage, $sort, $defaultSort, $query);
-            Parser\FilterParser::parseFilters($filters, $query);
+            if (is_array($this->selectInnerJoin)) {
+                $this->getQueryForSelectInnerJoin($filters, $pageSize, $currentPage, $sort, $defaultSort, $query);
+            }
         } else {
             if (is_array($this->selectInnerJoin)) {
                 $this->getQueryForSelectInnerJoin($filters, $pageSize, $currentPage, $sort, $defaultSort, $query);
             }
-            $query->setMaxResults($pageSize)
-                ->setFirstResult($currentPage * $pageSize);
-
-            Parser\FilterParser::parseFilters($filters, $query);
         }
+
+        $query->setMaxResults($pageSize)
+            ->setFirstResult($currentPage * $pageSize);
+        Parser\FilterParser::parseFilters($filters, $query);
 
         Parser\SortParser::parseSort($sort, $defaultSort, $query);
 
@@ -171,6 +173,7 @@ abstract class AbstractCrudRepository extends EntityRepository
         foreach ($this->selectInnerJoin as $join) {
             $query->innerJoin($join['field'], $join['alias']);
         }
+
     }
 
     /**
@@ -178,40 +181,8 @@ abstract class AbstractCrudRepository extends EntityRepository
      */
     protected function getQueryForSelectLeftJoin($filters, $pageSize, $currentPage, $sort, $defaultSort, $query)
     {
-        $identifiers = ($this->getClassMetadata()->getIdentifier());
-        $queryToRetrieveIds = $this->createQueryBuilder('p')
-            ->select('p.' . $identifiers[0])
-            ->setMaxResults($pageSize)
-            ->setFirstResult($currentPage * $pageSize);
-
-        if (is_array($this->selectInnerJoin)) {
-            foreach ($this->selectInnerJoin as $join) {
-                $query->innerJoin($join['field'], $join['alias']);
-                $queryToRetrieveIds->innerJoin($join['field'], $join['alias']);
-            }
-        }
-
         foreach ($this->selectLeftJoin as $join) {
             $query->leftJoin($join['field'], $join['alias']);
-            $queryToRetrieveIds->leftJoin($join['field'], $join['alias']);
-        }
-
-        Parser\FilterParser::parseFilters($filters, $queryToRetrieveIds);
-        Parser\SortParser::parseSort($sort, $defaultSort, $queryToRetrieveIds);
-
-        $queryToRetrieveIds->groupBy('p.' . $identifiers[0]);
-
-        $selectedEntities = $queryToRetrieveIds->getQuery()->expireQueryCache(true)->getArrayResult();
-        $ids = array();
-        foreach ($selectedEntities as $entity) {
-            $ids[] = $entity[$identifiers[0]];
-        }
-
-        if (empty($ids)) {
-            $query->andWhere('1 != 1');
-        } else {
-            $query->andWhere('p.' . $identifiers[0] . ' IN (:ids_list)')
-                ->setParameter('ids_list', $ids);
         }
     }
 }
