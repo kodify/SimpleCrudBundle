@@ -16,15 +16,15 @@ class FilterParserTest extends TestBaseClass
         return array(
             array(
                 array(
-                    'shouldReceive' => array('p.key = :value_key' . md5('=')),
-                    'parameters' => array(array('value_key' . md5('='), 'filter'))
+                    'shouldReceive' => array('p.key = :value_pkey' . md5('=')),
+                    'parameters' => array(array('value_pkey' . md5('='), 'filter'))
                 ),
                 array('key' => 'filter')
             ),
             array(
                 array(
-                    'shouldReceive' => array('table.tableKey = :value_tableKey' . md5('=')),
-                    'parameters' => array(array('value_tableKey' . md5('='), 'filter'))
+                    'shouldReceive' => array('table.tableKey = :value_tabletableKey' . md5('=')),
+                    'parameters' => array(array('value_tabletableKey' . md5('='), 'filter'))
                 ),
                 array('table.tableKey' => 'filter')
             ),
@@ -59,12 +59,12 @@ class FilterParserTest extends TestBaseClass
             array(
                 array(
                     'shouldReceive' => array(
-                        'p.key = :value_key' . md5('='),
-                        'p.key != :value_key' . md5('!='),
+                        'p.key = :value_pkey' . md5('='),
+                        'p.key != :value_pkey' . md5('!='),
                     ),
                     'parameters' => array(
-                        array('value_key' . md5('='), '1'),
-                        array('value_key' . md5('!='), '2')
+                        array('value_pkey' . md5('='), '1'),
+                        array('value_pkey' . md5('!='), '2')
                     )
                 ),
                 array('key' => array(array('value' => '1', 'operator' => '='), array('value' => '2', 'operator' => '!=')))

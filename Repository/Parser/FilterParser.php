@@ -7,6 +7,9 @@ class FilterParser
     {
         if (!empty($filters)) {
             foreach ($filters as $key => $filter) {
+
+
+
                 if (self::isValidItemToFilter($filter)) {
                     if (is_array($filter) && !isset($filter['value'])) {
                         foreach ($filter as $subFilter) {
@@ -70,8 +73,8 @@ class FilterParser
                 $query->andWhere($query->expr()->isNotNull('VideoWebsite.scheduledFor'));
                 break;
             default:
-                $query->andWhere($defaultEntity . '.' . $key . ' ' . $defaultOperator . ' :value_' . $key . md5($defaultOperator))
-                    ->setParameter('value_' . $key  . md5($defaultOperator), $filter);
+                $query->andWhere($defaultEntity . '.' . $key . ' ' . $defaultOperator . ' :value_' . $defaultEntity . $key . md5($defaultOperator))
+                    ->setParameter('value_' . $defaultEntity . $key  . md5($defaultOperator), $filter);
         }
     }
 

@@ -115,11 +115,11 @@ class CrudRepository extends TestBaseClass
 
         $where = $result->getDQLPart('where')->getParts();
         $this->assertCount(1, $where);
-        $this->assertEquals('p.id != :value_id' . md5('!='), $where[0]);
+        $this->assertEquals('p.id != :value_pid' . md5('!='), $where[0]);
 
         $params = $result->getParameters();
         $this->assertCount(1, $params);
-        $this->assertEquals('value_id' . md5('!='), $params[0]->getName());
+        $this->assertEquals('value_pid' . md5('!='), $params[0]->getName());
         $this->assertEquals('10', $params[0]->getValue());
     }
 
