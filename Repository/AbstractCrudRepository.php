@@ -125,7 +125,7 @@ abstract class AbstractCrudRepository extends EntityRepository
     {
         $query = $this->createQueryBuilder('p');
         if ($fields != null && $this->useFieldsToSelect) {
-            $query->select(implode(',', $fields));
+            $query->select('DISTINCT ' . implode(',', $fields));
         } else {
             $query->select($this->selectEntities);
         }

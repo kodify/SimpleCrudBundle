@@ -142,6 +142,7 @@ abstract class AbstractCrudController extends Controller
     {
         $tableHeader   = $this->defineTableHeader();
         $tableRows     = $this->getData();
+
         $totalRows     = $this->getTotalRows();
         $sortedIndexes = $this->getHeaderIndexes($tableHeader);
 
@@ -267,11 +268,13 @@ abstract class AbstractCrudController extends Controller
         $sortedIndexes = array();
 
         foreach ($tableHeader as $row) {
-            if (isset($row['alias'])) {
+            if (isset($row['alias']) && isset($row['key'])) {
                 $sortedIndexes[] = $row['alias'];
             } else {
                 if (isset($row['key'])) {
                     $sortedIndexes[] = $row['key'];
+                } else {
+                    $sortedIndexes[] = $row['label'];
                 }
             }
         }
@@ -517,11 +520,14 @@ abstract class AbstractCrudController extends Controller
             }
             if (isset($field['key'])) {
                 $strField = $strField .$field['key'];
+                if (isset($field['alias'])) {
+                    $strField .= ' as ' . $field['alias'];
+                }
             }
-            if (isset($field['alias'])) {
-                $strField .= ' as ' . $field['alias'];
+
+            if ($strField != '') {
+                $fields[] = $strField;
             }
-            $fields[] = $strField;
         }
 
         return $fields;
@@ -548,7 +554,7 @@ abstract class AbstractCrudController extends Controller
         if (is_array($filters)) {
             foreach ($filters as $field => $filter) {
                 foreach ($tableHeader as $row) {
-                    if (isset($row['alias']) && $row['alias'] == $field) {
+                    if (isset($row['key']) && isset($row['alias']) && $row['alias'] == $field) {
                         $filters[$row['key']] = $filters[$field];
                         unset($filters[$field]);
                         continue;
