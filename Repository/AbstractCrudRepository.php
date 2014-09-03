@@ -61,7 +61,7 @@ abstract class AbstractCrudRepository extends EntityRepository
             $query->setMaxResults($pageSize)
                 ->setFirstResult($currentPage * $pageSize);
 
-            $this->getQueryForSelectLeftJoin($query);
+            $this->getQueryForSelectInnerJoin($query);
 
             Parser\FilterParser::parseFilters($filters, $query);
         } else {
