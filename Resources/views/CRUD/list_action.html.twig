@@ -1,10 +1,10 @@
 {% block render_action %}
-    <a  id="{{ key }}_{{ row[index_key] }}"
+    <a  id="{{ key }}_{{ row[index_key_action] }}"
         class="btn btn-primary {{ key }}-button {% if action_row['css_class'] is defined %}{{ action_row['css_class'] }}{% endif %}"
         data-success-callback-function="{% if action_row['success_action'] is defined %}{{ action_row['success_action'] }}{% else %}hideRow{% endif %}"
         data-error-callback-function="displayErrorMessage"
         data-row-id="{{ row[index_key] }}"
-        href="{{ path(action_row.url, {'id' : row[index_key]}) }}"
+        href="{{ path(action_row.url, {'id' : row[index_key_action]}) }}"
             >
         {{ action_row.label }} <i class="icon-{{ action_row.ico }} icon-white"></i>
     </a>

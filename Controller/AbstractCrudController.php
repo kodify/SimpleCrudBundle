@@ -23,6 +23,7 @@ abstract class AbstractCrudController extends Controller
     protected $actions          = array('edit');
     protected $massActions      = array();
     protected $indexKey         = null;
+    protected $indexKeyAction   = null;
     protected $controllerName   = null;
     protected $entityClass      = null;
     protected $formClassName    = null;
@@ -181,6 +182,7 @@ abstract class AbstractCrudController extends Controller
         return array(
             'page_header'                   => $this->pageTitle,
             'index_key'                     => $this->indexKey,
+            'index_key_action'              => $this->indexKeyAction,
             'table_rows'                    => $tableRows,
             'table_header'                  => $tableHeader,
             'has_row_actions'               => !empty($this->actions),
@@ -364,6 +366,10 @@ abstract class AbstractCrudController extends Controller
                 'css_class'     => $cssClass,
                 'success_action' => $successAction,
             );
+        }
+
+        if ($this->indexKeyAction == null) {
+            $this->indexKeyAction = $this->indexKey;
         }
 
         return $rowActions;
