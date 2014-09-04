@@ -9,6 +9,7 @@ use Doctrine\ORM\QueryBuilder,
     Doctrine\ORM\Query,
     Doctrine\ORM\Query\ResultSetMapping,
     Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Tools\Pagination\CountWalker;
 
 abstract class AbstractCrudRepository extends EntityRepository
 {
@@ -52,24 +53,15 @@ abstract class AbstractCrudRepository extends EntityRepository
             $query->setMaxResults($pageSize)
                 ->setFirstResult($currentPage * $pageSize);
 
-            if (is_array($this->selectInnerJoin)) {
-                foreach ($this->selectInnerJoin as $join) {
-                    $query->innerJoin($join['field'], $join['alias']);
-                }
-            }
-
-            foreach ($this->selectLeftJoin as $join) {
-                $query->leftJoin($join['field'], $join['alias']);
-            }
+            $this->getQueryForSelectInnerJoin($query);
+            $this->getQueryForSelectLeftJoin($query);
 
             Parser\FilterParser::parseFilters($filters, $query);
         } else if (is_array($this->selectInnerJoin)) {
             $query->setMaxResults($pageSize)
                 ->setFirstResult($currentPage * $pageSize);
 
-            foreach ($this->selectInnerJoin as $join) {
-                $query->innerJoin($join['field'], $join['alias']);
-            }
+            $this->getQueryForSelectInnerJoin($query);
 
             Parser\FilterParser::parseFilters($filters, $query);
         } else {
@@ -87,12 +79,7 @@ abstract class AbstractCrudRepository extends EntityRepository
         $query = $this->createQueryBuilder('p')
             ->select('partial p.{id}');
 
-        if (is_array($this->selectLeftJoin)) {
-            foreach ($this->selectLeftJoin as $join) {
-                $query->leftJoin($join['field'], $join['alias']);
-            }
-        }
-
+        $this->getQueryForSelectLeftJoin($query);
         Parser\FilterParser::parseFilters($filters, $query);
 
         return $query->getQuery()->getArrayResult();
@@ -104,10 +91,12 @@ abstract class AbstractCrudRepository extends EntityRepository
     public function countQuery($query)
     {
         if (!$this->useCustomCounter) {
+
             return count(new Paginator($query));
         } else {
             $countQuery = $this->cloneQuery($query->getQuery());
             $countQuery->setHint(Query::HINT_CUSTOM_TREE_WALKERS, array('Doctrine\ORM\Tools\Pagination\CountWalker'));
+            $countQuery->setHint(CountWalker::HINT_DISTINCT, true);
 
             try {
                 $data =  $countQuery->getScalarResult();
@@ -125,21 +114,13 @@ abstract class AbstractCrudRepository extends EntityRepository
     {
         $query = $this->createQueryBuilder('p');
         if ($fields != null && $this->useFieldsToSelect) {
-            $query->select(implode(',', $fields));
+            $query->select('DISTINCT ' . implode(',', $fields));
         } else {
             $query->select($this->selectEntities);
         }
 
-        if (is_array($this->selectLeftJoin)) {
-            $this->getQueryForSelectLeftJoin($filters, $pageSize, $currentPage, $sort, $defaultSort, $query);
-            if (is_array($this->selectInnerJoin)) {
-                $this->getQueryForSelectInnerJoin($filters, $pageSize, $currentPage, $sort, $defaultSort, $query);
-            }
-        } else {
-            if (is_array($this->selectInnerJoin)) {
-                $this->getQueryForSelectInnerJoin($filters, $pageSize, $currentPage, $sort, $defaultSort, $query);
-            }
-        }
+        $this->getQueryForSelectInnerJoin($query);
+        $this->getQueryForSelectLeftJoin($query);
 
         $query->setMaxResults($pageSize)
             ->setFirstResult($currentPage * $pageSize);
@@ -168,10 +149,12 @@ abstract class AbstractCrudRepository extends EntityRepository
     /**
      * @codeCoverageIgnore
      */
-    protected function getQueryForSelectInnerJoin($filters, $pageSize, $currentPage, $sort, $defaultSort, $query)
+    protected function getQueryForSelectInnerJoin($query)
     {
-        foreach ($this->selectInnerJoin as $join) {
-            $query->innerJoin($join['field'], $join['alias']);
+        if (is_array($this->selectInnerJoin)) {
+            foreach ($this->selectInnerJoin as $join) {
+                $query->innerJoin($join['field'], $join['alias']);
+            }
         }
 
     }
@@ -179,10 +162,12 @@ abstract class AbstractCrudRepository extends EntityRepository
     /**
      * @codeCoverageIgnore
      */
-    protected function getQueryForSelectLeftJoin($filters, $pageSize, $currentPage, $sort, $defaultSort, $query)
+    protected function getQueryForSelectLeftJoin($query)
     {
-        foreach ($this->selectLeftJoin as $join) {
-            $query->leftJoin($join['field'], $join['alias']);
+        if (is_array($this->selectLeftJoin)) {
+            foreach ($this->selectLeftJoin as $join) {
+                $query->leftJoin($join['field'], $join['alias']);
+            }
         }
     }
 }

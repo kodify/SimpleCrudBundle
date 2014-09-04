@@ -52,7 +52,9 @@
             {% for row in table_header %}
                 {% if row.type is not defined or row.type != 'hidden' %}
                     {% if row.filterable is defined and row.filterable  %}
-                        {% set filterId = row.key %}
+                        {% if row.key is defined %}
+                            {% set filterId = row.key %}
+                        {% endif %}
                         {% if row.alias is defined %}
                             {% set filterId = row.alias %}
                         {% endif  %}
