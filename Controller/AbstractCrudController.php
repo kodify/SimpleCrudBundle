@@ -73,7 +73,8 @@ abstract class AbstractCrudController extends Controller
 
         return $this->render(
             $this->formLayout,
-            array(
+            array_merge(
+                array(
                 'cancel_url'       => $this->postAddRedirectTo(),
                 'form'             => $form->createView(),
                 'formObj'          => $form,
@@ -81,8 +82,14 @@ abstract class AbstractCrudController extends Controller
                 'object'           => $obj,
                 'page_title'       => $form->getName(),
                 'form_destination' => $destinationUrl,
+                ), $this->getAdditionalFormParameters()
             )
         );
+    }
+
+    protected function getAdditionalFormParameters()
+    {
+        return [];
     }
 
     protected function validateForm($form)
