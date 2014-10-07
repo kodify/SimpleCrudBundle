@@ -525,7 +525,11 @@ abstract class AbstractCrudController extends Controller
                 $strField = $field['table'] . '.';
             }
             if (isset($field['key'])) {
-                $strField = $strField .$field['key'];
+                if (isset($field['identity']) && $field['identity']) {
+                    $strField = 'IDENTITY(' . $strField . $field['key'] . ')';
+                } else {
+                    $strField = $strField . $field['key'];
+                }
                 if (isset($field['alias'])) {
                     $strField .= ' as ' . $field['alias'];
                 }
