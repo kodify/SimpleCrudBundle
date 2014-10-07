@@ -170,4 +170,41 @@ abstract class AbstractCrudRepository extends EntityRepository
             }
         }
     }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function setSelectEntities($selectEntities = 'p') {
+        $this->selectEntities = $selectEntities;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function setUseFieldsToSelect($use = true) {
+        $this->useFieldsToSelect = (bool)$use;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function setUseCustomCounter($use = true) {
+        $this->useCustomCounter = (bool)$use;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function setSelectInnerJoin($join)
+    {
+        $this->selectInnerJoin = $join;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function setSelectLeftJoin($join)
+    {
+        $this->selectLeftJoin = $join;
+    }
 }
