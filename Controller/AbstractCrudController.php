@@ -565,8 +565,13 @@ abstract class AbstractCrudController extends Controller
             foreach ($filters as $field => $filter) {
                 foreach ($tableHeader as $row) {
                     if (isset($row['key']) && isset($row['alias']) && $row['alias'] == $field) {
-                        $filters[$row['key']] = $filters[$field];
-                        unset($filters[$field]);
+                        if (isset($row['table'])) {
+                            $filters[$row['table'] . '.' . $row['key']] = $filters[$field];
+                            unset($filters[$field]);
+                        } else {
+                            $filters[$row['key']] = $filters[$field];
+                            unset($filters[$field]);
+                        }
                         continue;
                     }
                 }
