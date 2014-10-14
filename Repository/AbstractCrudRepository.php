@@ -96,7 +96,6 @@ abstract class AbstractCrudRepository extends EntityRepository
         } else {
             $countQuery = $this->cloneQuery($query->getQuery());
             $countQuery->setHint(Query::HINT_CUSTOM_TREE_WALKERS, array('Doctrine\ORM\Tools\Pagination\CountWalker'));
-            $countQuery->setHint(CountWalker::HINT_DISTINCT, true);
 
             try {
                 $data =  $countQuery->getScalarResult();
