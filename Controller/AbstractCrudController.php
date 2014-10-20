@@ -73,7 +73,8 @@ abstract class AbstractCrudController extends Controller
 
         return $this->render(
             $this->formLayout,
-            array(
+            array_merge(
+                array(
                 'cancel_url'       => $this->postAddRedirectTo(),
                 'form'             => $form->createView(),
                 'formObj'          => $form,
@@ -81,8 +82,14 @@ abstract class AbstractCrudController extends Controller
                 'object'           => $obj,
                 'page_title'       => $form->getName(),
                 'form_destination' => $destinationUrl,
+                ), $this->getAdditionalFormParameters()
             )
         );
+    }
+
+    protected function getAdditionalFormParameters()
+    {
+        return [];
     }
 
     protected function validateForm($form)
@@ -525,7 +532,11 @@ abstract class AbstractCrudController extends Controller
                 $strField = $field['table'] . '.';
             }
             if (isset($field['key'])) {
-                $strField = $strField .$field['key'];
+                if (isset($field['identity']) && $field['identity']) {
+                    $strField = 'IDENTITY(' . $strField . $field['key'] . ')';
+                } else {
+                    $strField = $strField . $field['key'];
+                }
                 if (isset($field['alias'])) {
                     $strField .= ' as ' . $field['alias'];
                 }
@@ -561,8 +572,13 @@ abstract class AbstractCrudController extends Controller
             foreach ($filters as $field => $filter) {
                 foreach ($tableHeader as $row) {
                     if (isset($row['key']) && isset($row['alias']) && $row['alias'] == $field) {
-                        $filters[$row['key']] = $filters[$field];
-                        unset($filters[$field]);
+                        if (isset($row['table'])) {
+                            $filters[$row['table'] . '.' . $row['key']] = $filters[$field];
+                            unset($filters[$field]);
+                        } else {
+                            $filters[$row['key']] = $filters[$field];
+                            unset($filters[$field]);
+                        }
                         continue;
                     }
                 }
