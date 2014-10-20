@@ -27,7 +27,7 @@
                         {% elseif table_header[counter]['type'] == 'options' %}
                             {{ table_header[counter]['options'][value] }}
                         {% elseif table_header[counter]['type'] == 'link' %}
-                            <a href="{{ value }}" target="_blank">{{ value }}</a>
+                            <a href="{{ value }}" target="_blank">{{ value|slice(0, 40) }}{% if value|length > 40 %}...{% endif %}</a>
                         {% elseif table_header[counter]['type'] == 'array' %}
                             {% for array_value in value %}
                                 {{ array_value[table_header[counter]['array_key']] }} <br>
