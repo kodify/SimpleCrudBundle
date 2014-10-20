@@ -96,7 +96,6 @@ abstract class AbstractCrudRepository extends EntityRepository
         } else {
             $countQuery = $this->cloneQuery($query->getQuery());
             $countQuery->setHint(Query::HINT_CUSTOM_TREE_WALKERS, array('Doctrine\ORM\Tools\Pagination\CountWalker'));
-            $countQuery->setHint(CountWalker::HINT_DISTINCT, true);
 
             try {
                 $data =  $countQuery->getScalarResult();
@@ -169,5 +168,42 @@ abstract class AbstractCrudRepository extends EntityRepository
                 $query->leftJoin($join['field'], $join['alias']);
             }
         }
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function setSelectEntities($selectEntities = 'p') {
+        $this->selectEntities = $selectEntities;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function setUseFieldsToSelect($use = true) {
+        $this->useFieldsToSelect = (bool)$use;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function setUseCustomCounter($use = true) {
+        $this->useCustomCounter = (bool)$use;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function setSelectInnerJoin($join)
+    {
+        $this->selectInnerJoin = $join;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function setSelectLeftJoin($join)
+    {
+        $this->selectLeftJoin = $join;
     }
 }
