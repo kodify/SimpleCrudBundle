@@ -173,22 +173,25 @@ abstract class AbstractCrudRepository extends EntityRepository
     /**
      * @codeCoverageIgnore
      */
-    public function setSelectEntities($selectEntities = 'p') {
+    public function setSelectEntities($selectEntities = 'p')
+    {
         $this->selectEntities = $selectEntities;
     }
 
     /**
      * @codeCoverageIgnore
      */
-    public function setUseFieldsToSelect($use = true) {
-        $this->useFieldsToSelect = (bool)$use;
+    public function setUseFieldsToSelect($use = true)
+    {
+        $this->useFieldsToSelect = (bool) $use;
     }
 
     /**
      * @codeCoverageIgnore
      */
-    public function setUseCustomCounter($use = true) {
-        $this->useCustomCounter = (bool)$use;
+    public function setUseCustomCounter($use = true)
+    {
+        $this->useCustomCounter = (bool) $use;
     }
 
     /**
