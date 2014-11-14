@@ -6,7 +6,7 @@
             {% endif %}
             {% for row in table_header %}
                 {% if row.type is not defined or row.type != 'hidden' %}
-                    <th>
+                    <th class="{% if row.key is defined %}{{ row.key | replace({'.' : '_'}) }}{% endif %}">
                         {% if row.sortable is defined and row.sortable  %}
                             <a id="crud_sort_{{ row.key }}" class="sort_index" data-sort-field="{{ row.key }}">
                                 {% if   current_sort[row.key]['field'] is defined and
