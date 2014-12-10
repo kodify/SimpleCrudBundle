@@ -67,10 +67,10 @@ class FilterParser
                 $query->andWhere("$defaultEntity.$key LIKE :term_$key")->setParameter("term_$key", '%' . $filter . '%');
                 break;
             case 'is null':
-                $query->andWhere($query->expr()->isNull('VideoWebsite.scheduledFor'));
+                $query->andWhere($query->expr()->isNull("$defaultEntity.$key"));
                 break;
             case 'is not null':
-                $query->andWhere($query->expr()->isNotNull('VideoWebsite.scheduledFor'));
+                $query->andWhere($query->expr()->isNotNull("$defaultEntity.$key"));
                 break;
             case 'is null field':
                 $query->andWhere($query->expr()->isNull($defaultEntity . '.' . $key));
