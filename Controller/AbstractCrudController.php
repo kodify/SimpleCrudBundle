@@ -70,20 +70,22 @@ abstract class AbstractCrudController extends Controller
         if (null == $destinationUrl) {
             $destinationUrl = 'post_add_' . $this->controllerName;
         }
+        $baseParameters =  array_merge([
+            'cancel_url'       => $this->postAddRedirectTo(),
+            'form'             => $form->createView(),
+            'formObj'          => $form,
+            'new_object'       => ($obj->getId() == null),
+            'object'           => $obj,
+            'page_title'       => $form->getName(),
+            'form_destination' => $destinationUrl,
+        ], $this->getAdditionalFormParameters());
+        if ($this->templateParameters) {
+            $baseParameters = array_merge($baseParameters, $this->templateParameters);
+        }
 
         return $this->render(
             $this->formLayout,
-            array_merge(
-                array(
-                'cancel_url'       => $this->postAddRedirectTo(),
-                'form'             => $form->createView(),
-                'formObj'          => $form,
-                'new_object'       => ($obj->getId() == null),
-                'object'           => $obj,
-                'page_title'       => $form->getName(),
-                'form_destination' => $destinationUrl,
-                ), $this->getAdditionalFormParameters()
-            )
+            $baseParameters
         );
     }
 
