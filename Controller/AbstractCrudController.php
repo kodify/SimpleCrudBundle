@@ -46,7 +46,6 @@ abstract class AbstractCrudController extends Controller
             $form->bind($request);
 
             if ($this->validateForm($form, $obj)) {
-
                 try {
                     $this->prePersist($obj);
                     $this->persist($obj);
@@ -82,12 +81,12 @@ abstract class AbstractCrudController extends Controller
                 'object'           => $obj,
                 'page_title'       => $form->getName(),
                 'form_destination' => $destinationUrl,
-                ), $this->getAdditionalFormParameters()
+                ), $this->getAdditionalFormParameters($obj)
             )
         );
     }
 
-    protected function getAdditionalFormParameters()
+    protected function getAdditionalFormParameters($obj)
     {
         return [];
     }
