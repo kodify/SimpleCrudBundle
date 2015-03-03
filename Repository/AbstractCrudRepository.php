@@ -11,6 +11,8 @@ use Doctrine\ORM\QueryBuilder,
     Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Tools\Pagination\CountWalker;
 
+use DoctrineExtensions\Paginate\Paginate;
+
 abstract class AbstractCrudRepository extends EntityRepository
 {
     protected $selectEntities       = 'p';
@@ -94,16 +96,7 @@ abstract class AbstractCrudRepository extends EntityRepository
 
             return count(new Paginator($query));
         } else {
-            $countQuery = $this->cloneQuery($query->getQuery());
-            $countQuery->setHint(Query::HINT_CUSTOM_TREE_WALKERS, array('Doctrine\ORM\Tools\Pagination\CountWalker'));
-
-            try {
-                $data =  $countQuery->getScalarResult();
-                $data = array_map('current', $data);
-                $count = array_sum($data);
-            } catch (NoResultException $e) {
-                $count = 0;
-            }
+            $count = Paginate::getTotalQueryResults($query->getQuery());
 
             return $count;
         }
@@ -120,6 +113,7 @@ abstract class AbstractCrudRepository extends EntityRepository
 
         $this->getQueryForSelectInnerJoin($query);
         $this->getQueryForSelectLeftJoin($query);
+        $this->getQueryForGroupBy($query);
 
         $query->setMaxResults($pageSize)
             ->setFirstResult($currentPage * $pageSize);
@@ -208,5 +202,22 @@ abstract class AbstractCrudRepository extends EntityRepository
     public function setSelectLeftJoin($join)
     {
         $this->selectLeftJoin = $join;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    protected function getQueryForGroupBy($query)
+    {
+        if (isset($this->groupBy)) {
+            $query->groupBy($this->groupBy);
+        }
+    }
+    /**
+     * @codeCoverageIgnore
+     */
+    public function setGroupBy($groupBy)
+    {
+        $this->groupBy = $groupBy;
     }
 }

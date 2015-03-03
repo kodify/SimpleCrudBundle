@@ -533,9 +533,13 @@ abstract class AbstractCrudController extends Controller
             if (isset($field['key'])) {
                 if (isset($field['identity']) && $field['identity']) {
                     $strField = 'IDENTITY(' . $strField . $field['key'] . ')';
-                } else {
-                    $strField = $strField . $field['key'];
-                }
+                }  else {
+                    if (isset($field['group_concat']) && $field['group_concat']) {
+                        $strField = 'group_concat(DISTINCT ' . $field['key'] . ')';
+                    } else {
+                        $strField = $strField . $field['key'];
+                    }
+                 }
                 if (isset($field['alias'])) {
                     $strField .= ' as ' . $field['alias'];
                 }
