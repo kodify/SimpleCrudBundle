@@ -539,7 +539,7 @@ abstract class AbstractCrudController extends Controller
     /**
      * @codeCoverageIgnore
      */
-    protected function functionName($field)
+    protected function getSelectFromFields($field)
     {
         $strField = '';
         if (isset($field['table'])) {
