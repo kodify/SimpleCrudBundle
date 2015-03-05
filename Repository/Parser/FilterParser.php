@@ -78,6 +78,9 @@ class FilterParser
             case 'is not null field':
                 $query->andWhere($query->expr()->isNotNull($defaultEntity . '.' . $key));
                 break;
+            case 'having_like':
+                $query->having('GROUP_CONCAT(' . $defaultEntity . '.' . $key . ') LIKE :term_'.$key)->setParameter("term_$key", '%'.$filter.'%');
+                break;
             default:
                 $query->andWhere($defaultEntity . '.' . $key . ' ' . $defaultOperator . ' :value_' . $defaultEntity . $key . md5($defaultOperator))
                     ->setParameter('value_' . $defaultEntity . $key  . md5($defaultOperator), $filter);
@@ -132,6 +135,9 @@ class FilterParser
                 break;
             case 'is not null field':
                 $query->andWhere($query->expr()->isNotNull($defaultEntity . '.' . $key));
+                break;
+            case 'having_like':
+                $query->having('GROUP_CONCAT(' . $defaultEntity . '.' . $key . ') LIKE :term_'.$key)->setParameter("term_$key", '%'.$filter.'%');
                 break;
             default:
                 $query->orWhere($defaultEntity . '.' . $key . ' ' . $defaultOperator . ' :value_' . $key . md5($defaultOperator))

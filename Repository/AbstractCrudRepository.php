@@ -11,13 +11,16 @@ use Doctrine\ORM\QueryBuilder,
     Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Tools\Pagination\CountWalker;
 
+use DoctrineExtensions\Paginate\Paginate;
+
 abstract class AbstractCrudRepository extends EntityRepository
 {
-    protected $selectEntities       = 'p';
-    protected $selectLeftJoin       = null;
-    protected $selectInnerJoin      = null;
-    protected $useFieldsToSelect    = false;
-    protected $useCustomCounter     = false;
+    protected $selectEntities               = 'p';
+    protected $selectLeftJoin               = null;
+    protected $selectInnerJoin              = null;
+    protected $useFieldsToSelect            = false;
+    protected $useCustomCounter             = false;
+    protected $useDoctrineExtensionCounter  = false;
 
     public function __construct($em, ClassMetadata $class, $selectEntities = null, $selectLeftJoin = null)
     {
@@ -55,6 +58,7 @@ abstract class AbstractCrudRepository extends EntityRepository
 
             $this->getQueryForSelectInnerJoin($query);
             $this->getQueryForSelectLeftJoin($query);
+            $this->getQueryForGroupBy($query);
 
             Parser\FilterParser::parseFilters($filters, $query);
         } else if (is_array($this->selectInnerJoin)) {
@@ -62,6 +66,7 @@ abstract class AbstractCrudRepository extends EntityRepository
                 ->setFirstResult($currentPage * $pageSize);
 
             $this->getQueryForSelectInnerJoin($query);
+            $this->getQueryForGroupBy($query);
 
             Parser\FilterParser::parseFilters($filters, $query);
         } else {
@@ -90,10 +95,7 @@ abstract class AbstractCrudRepository extends EntityRepository
      */
     public function countQuery($query)
     {
-        if (!$this->useCustomCounter) {
-
-            return count(new Paginator($query));
-        } else {
+        if ($this->useCustomCounter) {
             $countQuery = $this->cloneQuery($query->getQuery());
             $countQuery->setHint(Query::HINT_CUSTOM_TREE_WALKERS, array('Doctrine\ORM\Tools\Pagination\CountWalker'));
 
@@ -107,6 +109,25 @@ abstract class AbstractCrudRepository extends EntityRepository
 
             return $count;
         }
+
+        if ($this->useDoctrineExtensionCounter) {
+            $countQuery = $this->cloneQuery($query->getQuery());
+            $countQuery->setHint(Query::HINT_CUSTOM_TREE_WALKERS, array('DoctrineExtensions\Paginate\CountWalker'));
+            $countQuery->setFirstResult(null)->setMaxResults(null);
+            $countQuery->setParameters($query->getParameters());
+
+            try {
+                $data =  $countQuery->getScalarResult();
+                $data = array_map('current', $data);
+                $count = array_sum($data);
+            } catch (NoResultException $e) {
+                $count = 0;
+            }
+
+            return $count;
+        }
+
+        return count(new Paginator($query));
     }
 
     public function getQuery($filters = array(), $pageSize = 25, $currentPage = 0, $sort = null, $defaultSort = null, $fields = null)
@@ -120,6 +141,7 @@ abstract class AbstractCrudRepository extends EntityRepository
 
         $this->getQueryForSelectInnerJoin($query);
         $this->getQueryForSelectLeftJoin($query);
+        $this->getQueryForGroupBy($query);
 
         $query->setMaxResults($pageSize)
             ->setFirstResult($currentPage * $pageSize);
@@ -197,6 +219,14 @@ abstract class AbstractCrudRepository extends EntityRepository
     /**
      * @codeCoverageIgnore
      */
+    public function setUseDoctrineExtensionCounter($use = true)
+    {
+        $this->useDoctrineExtensionCounter = (bool) $use;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
     public function setSelectInnerJoin($join)
     {
         $this->selectInnerJoin = $join;
@@ -208,5 +238,22 @@ abstract class AbstractCrudRepository extends EntityRepository
     public function setSelectLeftJoin($join)
     {
         $this->selectLeftJoin = $join;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    protected function getQueryForGroupBy($query)
+    {
+        if (isset($this->groupBy)) {
+            $query->groupBy($this->groupBy);
+        }
+    }
+    /**
+     * @codeCoverageIgnore
+     */
+    public function setGroupBy($groupBy)
+    {
+        $this->groupBy = $groupBy;
     }
 }

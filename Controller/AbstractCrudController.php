@@ -526,20 +526,7 @@ abstract class AbstractCrudController extends Controller
         $headers    = $this->defineTableHeader();
         $fields     = array();
         foreach ($headers as $field) {
-            $strField = '';
-            if (isset($field['table'])) {
-                $strField = $field['table'] . '.';
-            }
-            if (isset($field['key'])) {
-                if (isset($field['identity']) && $field['identity']) {
-                    $strField = 'IDENTITY(' . $strField . $field['key'] . ')';
-                } else {
-                    $strField = $strField . $field['key'];
-                }
-                if (isset($field['alias'])) {
-                    $strField .= ' as ' . $field['alias'];
-                }
-            }
+            $strField = $this->getSelectFromFields($field);
 
             if ($strField != '') {
                 $fields[] = $strField;
@@ -547,6 +534,34 @@ abstract class AbstractCrudController extends Controller
         }
 
         return $fields;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    protected function getSelectFromFields($field)
+    {
+        $strField = '';
+        if (isset($field['table'])) {
+            $strField = $field['table'] . '.';
+        }
+
+        if (isset($field['key'])) {
+            if (isset($field['identity']) && $field['identity']) {
+                $strField = 'IDENTITY(' . $strField . $field['key'] . ')';
+            } else {
+                if (isset($field['group_concat']) && $field['group_concat']) {
+                    $strField = 'group_concat(DISTINCT ' . $field['key'] . ')';
+                } else {
+                    $strField = $strField . $field['key'];
+                }
+            }
+            if (isset($field['alias'])) {
+                $strField .= ' as ' . $field['alias'];
+            }
+        }
+
+        return $strField;
     }
 
     /**
