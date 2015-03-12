@@ -58,13 +58,13 @@ class FilterParser
                     ->setParameter('value_' . $key, $filter);
                 break;
             case 'left_like':
-                $query->andWhere("$defaultEntity.$key LIKE :term_$key")->setParameter("term_$key", '%'.$filter);
+                $query->andWhere("$defaultEntity.$key LIKE :term_{$defaultEntity}_$key")->setParameter("term_{$defaultEntity}_$key", '%'.$filter);
                 break;
             case 'right_like':
-                $query->andWhere("$defaultEntity.$key LIKE :term_$key")->setParameter("term_$key", $filter . '%');
+                $query->andWhere("$defaultEntity.$key LIKE :term_{$defaultEntity}_$key")->setParameter("term_{$defaultEntity}_$key", $filter . '%');
                 break;
             case 'full_like':
-                $query->andWhere("$defaultEntity.$key LIKE :term_$key")->setParameter("term_$key", '%' . $filter . '%');
+                $query->andWhere("$defaultEntity.$key LIKE :term_{$defaultEntity}_$key")->setParameter("term_{$defaultEntity}_$key", '%' . $filter . '%');
                 break;
             case 'is null':
                 $query->andWhere($query->expr()->isNull("$defaultEntity.$key"));
@@ -79,7 +79,7 @@ class FilterParser
                 $query->andWhere($query->expr()->isNotNull($defaultEntity . '.' . $key));
                 break;
             case 'having_like':
-                $query->having('GROUP_CONCAT(' . $defaultEntity . '.' . $key . ') LIKE :term_'.$key)->setParameter("term_$key", '%'.$filter.'%');
+                $query->having('GROUP_CONCAT(' . $defaultEntity . '.' . $key . ') LIKE :term_' . $defaultEntity . '_' . $key)->setParameter("term_{$defaultEntity}_$key", '%'.$filter.'%');
                 break;
             default:
                 $query->andWhere($defaultEntity . '.' . $key . ' ' . $defaultOperator . ' :value_' . $defaultEntity . $key . md5($defaultOperator))
