@@ -1,4 +1,4 @@
-{% if app.security.getToken() != null %}
+{% if app.user != null %}
     {% if app.session.flashbag.has('success') or app.session.flashbag.has('error') or app.session.flashbag.has('info') or app.session.flashbag.has('warning') %}
         <div id="action_messages">
             {% if app.session.flashbag.has('error') %}
