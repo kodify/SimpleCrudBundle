@@ -91,7 +91,7 @@ abstract class AbstractCrudController extends Controller
         return [];
     }
 
-    protected function validateForm($form)
+    protected function validateForm($form, $obj = null)
     {
         return $form->isValid();
     }
