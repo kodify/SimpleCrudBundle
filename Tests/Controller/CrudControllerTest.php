@@ -371,7 +371,9 @@ class CrudControllerTest extends TestBaseClass
         $mockRequest = M::mock('Symfony\Component\HttpFoundation\Request[isMethod]');
         $mockRequest->shouldReceive('isMethod')->once()->andReturn(false);
 
-        $mockForm = M::mock('Symfony\Component\Form\Form[createView,getName]')
+        $mockFormBuilder = M::mock('Symfony\Component\Form\FormBuilder')->shouldReceive('getInheritData')->zeroOrMoreTimes()->andReturn(false);
+
+        $mockForm = M::mock('Symfony\Component\Form\Form[createView,getName]', $mockFormBuilder)
             ->shouldReceive('createView')->once()->andReturn('view')
             ->shouldReceive('getName')->times(1)->andReturn('forn name')
             ->getMock();
@@ -406,7 +408,9 @@ class CrudControllerTest extends TestBaseClass
         $mockFormObject = M::mock();
         $mockFormObject->shouldReceive('getName')->once()->andReturn('test');
 
-        $mockForm = M::mock('Symfony\Component\Form\Form[getName,createView,bind,isValid]')
+        $mockFormBuilder = M::mock('Symfony\Component\Form\FormBuilder')->shouldReceive('getInheritData')->zeroOrMoreTimes()->andReturn(false);
+
+        $mockForm = M::mock('Symfony\Component\Form\Form[getName,createView,bind,isValid]', $mockFormBuilder)
             ->shouldReceive('createView')->once()->andReturn('view')
             ->shouldReceive('getName')->times(1)->andReturn('form name')
             ->shouldReceive('bind')->times(1)
@@ -450,7 +454,9 @@ class CrudControllerTest extends TestBaseClass
         $mockRequest = M::mock('Symfony\Component\HttpFoundation\Request[isMethod]');
         $mockRequest->shouldReceive('isMethod')->once()->andReturn(true);
 
-        $mockForm = M::mock('Symfony\Component\Form\Form[getName,createView,bind,isValid]')
+        $mockFormBuilder = M::mock('Symfony\Component\Form\FormBuilder')->shouldReceive('getInheritData')->zeroOrMoreTimes()->andReturn(false);
+
+        $mockForm = M::mock('Symfony\Component\Form\Form[getName,createView,bind,isValid]', $mockFormBuilder)
             ->shouldReceive('createView')->once()->andReturn('view')
             ->shouldReceive('isValid')->once()->andReturn(false)
             ->shouldReceive('bind')->once()->with($mockRequest)
@@ -491,7 +497,9 @@ class CrudControllerTest extends TestBaseClass
         $mockRequest = M::mock('Symfony\Component\HttpFoundation\Request[isMethod]');
         $mockRequest->shouldReceive('isMethod')->once()->andReturn(true);
 
-        $mockForm = M::mock('Symfony\Component\Form\Form[createView,bind,isValid]');
+        $mockFormBuilder = M::mock('Symfony\Component\Form\FormBuilder')->shouldReceive('getInheritData')->zeroOrMoreTimes()->andReturn(false);
+
+        $mockForm = M::mock('Symfony\Component\Form\Form[createView,bind,isValid]', $mockFormBuilder);
         $mockForm->shouldReceive('createView')->never()->andReturn('view');
         $mockForm->shouldReceive('isValid')->once()->andReturn(true);
         $mockForm->shouldReceive('bind')->once()->with($mockRequest);
