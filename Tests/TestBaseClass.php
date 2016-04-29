@@ -5,15 +5,17 @@ namespace Kodify\SimpleCrudBundle\Tests;
 use \Mockery as M;
 
 
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
 
-abstract class TestBaseClass extends \PHPUnit_Framework_TestCase
+abstract class TestBaseClass extends KernelTestCase
 {
     protected $em = null;
+
 
     /**
      * @param  string $className
