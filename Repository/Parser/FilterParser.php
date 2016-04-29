@@ -7,9 +7,6 @@ class FilterParser
     {
         if (!empty($filters)) {
             foreach ($filters as $key => $filter) {
-
-
-
                 if (self::isValidItemToFilter($filter)) {
                     if (is_array($filter) && !isset($filter['value'])) {
                         foreach ($filter as $subFilter) {
