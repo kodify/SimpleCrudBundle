@@ -124,7 +124,7 @@ class FilterParserTest extends TestBaseClass
         $queryMock = M::mock();
 
         $exprMock = M::mock();
-        $exprMock->shouldReceive($expected['operator'])->with()->once()->andReturn($exprMock);
+        $exprMock->shouldReceive($expected['operator'])->once()->andReturn($exprMock);
 
         $queryMock->shouldReceive('expr')->once()->andReturn($exprMock);
         $queryMock->shouldReceive('andWhere')->with($exprMock)->once();

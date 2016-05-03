@@ -16,6 +16,14 @@ use Doctrine\ORM\Mapping\ClassMetadata;
  */
 class CrudRepository extends TestBaseClass
 {
+    public function setUp()
+    {
+        self::bootKernel();
+        $this->em = static::$kernel->getContainer()
+            ->get('doctrine')
+            ->getManager();
+    }
+
     private function callControllerMethod($methodName, $params = array(), $changeProtectedAttributes = array())
     {
         $classMetadata =  new ClassMetadata('Test');
@@ -52,7 +60,10 @@ class CrudRepository extends TestBaseClass
         $mockQuery = M::mock();
         $mockQuery->shouldReceive('getQuery')->once()->andReturn($mockQueryR);
 
-        $repo = M::mock('Kodify\SimpleCrudBundle\Repository\AbstractCrudRepository[getQuery]');
+        $mockEm = M::mock('Doctrine\ORM\EntityManager');
+        $mockClassMetadata = M::mock('Doctrine\ORM\Mapping\ClassMetadata');
+
+        $repo = M::mock('Kodify\SimpleCrudBundle\Repository\AbstractCrudRepository[getQuery]', [$mockEm, $mockClassMetadata]);
         $repo->shouldReceive('getQuery')->once()->andReturn($mockQuery);
 
         $response = $repo->getRows();

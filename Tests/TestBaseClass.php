@@ -5,27 +5,16 @@ namespace Kodify\SimpleCrudBundle\Tests;
 use \Mockery as M;
 
 
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
 
-abstract class TestBaseClass extends \PHPUnit_Framework_TestCase
+abstract class TestBaseClass extends KernelTestCase
 {
     protected $em = null;
-
-    public function setUp()
-    {
-        $this->em = M::mock('\Doctrine\ORM\EntityManager[close, getConfiguration]');
-        $this->em->shouldReceive('getConfiguration')->andReturn(new \Doctrine\ORM\Configuration());
-    }
-
-    public function tearDown()
-    {
-        M::close();
-        parent::tearDown();
-    }
 
 
     /**
