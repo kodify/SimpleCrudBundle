@@ -41,7 +41,8 @@ abstract class AbstractCrudController extends Controller
     {
         $this->request = $request;
         $formClass = $this->getEntityForm();
-        $obj       = $this->getEntityFromRequest($formClass);
+        $id = $request->get('id');
+        $obj       = $this->getEntityFromRequest($formClass, $request, $id);
         $form      = $this->createForm($formClass, $obj);
 
         if ($request->isMethod('POST')) {
@@ -59,7 +60,7 @@ abstract class AbstractCrudController extends Controller
                     }
                     $this->obj = $obj;
 
-                    return $this->redirect($this->postAddRedirectTo());
+                    return $this->redirect($this->postAddRedirectTo($request));
                 } catch (\Exception $e) {
                     $this->get('logger')->err($e);
                     $this->get('session')->getFlashBag()->add('error', 'Error saving ' . $formClass->getName());
@@ -77,7 +78,7 @@ abstract class AbstractCrudController extends Controller
             $this->formLayout,
             array_merge(
                 array(
-                'cancel_url'       => $this->postAddRedirectTo(),
+                'cancel_url'       => $this->postAddRedirectTo($request),
                 'form'             => $form->createView(),
                 'formObj'          => $form,
                 'new_object'       => ($obj->getId() == null),
@@ -109,13 +110,13 @@ abstract class AbstractCrudController extends Controller
         $em->flush();
     }
 
-    public function getEntityFromRequest($formClass)
+    public function getEntityFromRequest($formClass, $request, $id)
     {
         $request = $this->request;
 
         $objId = null;
-        if ($request->get('id')) {
-            $objId = $request->get('id');
+        if ($id) {
+            $objId = $id;
         } else if ($request->isMethod('POST')) {
             $formData = $request->get($formClass->getName());
             $objId    = $formData['id'];
@@ -612,7 +613,7 @@ abstract class AbstractCrudController extends Controller
 
     }
 
-    protected function postAddRedirectTo()
+    protected function postAddRedirectTo($request)
     {
         return $this->generateUrl('get_' . $this->controllerName);
     }
