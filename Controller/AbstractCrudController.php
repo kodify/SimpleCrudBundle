@@ -32,12 +32,14 @@ abstract class AbstractCrudController extends Controller
 
     protected $pageTitle = '';
     protected $obj = null;
+    protected $request = null;
 
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function addAction(Request $request, $destinationUrl = null)
     {
+        $this->request = $request;
         $formClass = $this->getEntityForm();
         $obj       = $this->getEntityFromRequest($formClass);
         $form      = $this->createForm($formClass, $obj);
@@ -109,7 +111,7 @@ abstract class AbstractCrudController extends Controller
 
     public function getEntityFromRequest($formClass)
     {
-        $request = $this->get('request');
+        $request = $this->request;
 
         $objId = null;
         if ($request->get('id')) {
@@ -425,7 +427,7 @@ abstract class AbstractCrudController extends Controller
 
     protected function getPageSize()
     {
-        $form             = $this->get('request')->get('form');
+        $form             = $this->request->get('form');
         $defaultPageSizes = $this->getPageSizes();
         $pageSize         = $defaultPageSizes[0];
         if (isset($form['page_size'])) {
@@ -437,7 +439,7 @@ abstract class AbstractCrudController extends Controller
 
     protected function getCurrentPage()
     {
-        $form        = $this->get('request')->get('form');
+        $form        = $this->request->get('form');
         $currentPage = 0;
         if (isset($form['current_page'])) {
             $currentPage = $form['current_page'];
@@ -452,7 +454,7 @@ abstract class AbstractCrudController extends Controller
 
     protected function getUsedFilterFields($view = true)
     {
-        $filters = $this->get('request')->get('filter');
+        $filters = $this->request->get('filter');
         if (!$view) {
             $filters = $this->processAlias($filters);
         }
@@ -482,7 +484,7 @@ abstract class AbstractCrudController extends Controller
 
     protected function getSort()
     {
-        $post = $this->get('request')->get('sort');
+        $post = $this->request->get('sort');
 
         if (empty($post)) {
             $default = $this->getDefaultSort();
