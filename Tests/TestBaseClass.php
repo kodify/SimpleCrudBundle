@@ -2,6 +2,7 @@
 
 namespace Kodify\SimpleCrudBundle\Tests;
 
+use Doctrine\ORM\EntityManager;
 use \Mockery as M;
 
 
@@ -17,8 +18,9 @@ abstract class TestBaseClass extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->em = M::mock('\Doctrine\ORM\EntityManager[close, getConfiguration]');
-        $this->em->shouldReceive('getConfiguration')->andReturn(new \Doctrine\ORM\Configuration());
+        $this->em = \Phake::mock(EntityManager::class);
+        \Phake::when($this->em)->getConfiguration()->thenReturn(new \Doctrine\ORM\Configuration());
+        \Phake::when($this->em)->close()->thenReturn(null);
     }
 
     public function tearDown()
