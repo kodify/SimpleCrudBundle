@@ -371,12 +371,9 @@ class CrudControllerTest extends TestBaseClass
         $mockRequest = M::mock('Symfony\Component\HttpFoundation\Request[isMethod]');
         $mockRequest->shouldReceive('isMethod')->once()->andReturn(false);
 
-        $mockFormBuilder = M::mock('Symfony\Component\Form\FormBuilder')->shouldReceive('getInheritData')->zeroOrMoreTimes()->andReturn(false);
-
-        $mockForm = M::mock('Symfony\Component\Form\Form[createView,getName]', $mockFormBuilder)
-            ->shouldReceive('createView')->once()->andReturn('view')
-            ->shouldReceive('getName')->times(1)->andReturn('forn name')
-            ->getMock();
+        $mockForm = \Mockery::mock('Symfony\Component\Form\Form')->makePartial();
+        $mockForm->shouldReceive('createView')->once()->andReturn('view');
+        $mockForm->shouldReceive('getName')->times(1)->andReturn('forn name');
 
         $mockEntity = M::mock()
             ->shouldReceive('getName')->times(0)->andReturn('entity name')
@@ -408,14 +405,11 @@ class CrudControllerTest extends TestBaseClass
         $mockFormObject = M::mock();
         $mockFormObject->shouldReceive('getName')->once()->andReturn('test');
 
-        $mockFormBuilder = M::mock('Symfony\Component\Form\FormBuilder')->shouldReceive('getInheritData')->zeroOrMoreTimes()->andReturn(false);
-
-        $mockForm = M::mock('Symfony\Component\Form\Form[getName,createView,bind,isValid]', $mockFormBuilder)
-            ->shouldReceive('createView')->once()->andReturn('view')
-            ->shouldReceive('getName')->times(1)->andReturn('form name')
-            ->shouldReceive('bind')->times(1)
-            ->shouldReceive('isValid')->times(1)->andReturn(true)
-            ->getMock();
+        $mockForm = \Mockery::mock('Symfony\Component\Form\Form')->makePartial();
+        $mockForm->shouldReceive('createView')->once()->andReturn('view');
+        $mockForm->shouldReceive('getName')->times(1)->andReturn('form name');
+        $mockForm->shouldReceive('bind')->times(1);
+        $mockForm->shouldReceive('isValid')->times(1)->andReturn(true);
 
         $mockEntity = M::mock()
             ->shouldReceive('getName')->times(0)->andReturn('entity name')
@@ -454,14 +448,11 @@ class CrudControllerTest extends TestBaseClass
         $mockRequest = M::mock('Symfony\Component\HttpFoundation\Request[isMethod]');
         $mockRequest->shouldReceive('isMethod')->once()->andReturn(true);
 
-        $mockFormBuilder = M::mock('Symfony\Component\Form\FormBuilder')->shouldReceive('getInheritData')->zeroOrMoreTimes()->andReturn(false);
-
-        $mockForm = M::mock('Symfony\Component\Form\Form[getName,createView,bind,isValid]', $mockFormBuilder)
-            ->shouldReceive('createView')->once()->andReturn('view')
-            ->shouldReceive('isValid')->once()->andReturn(false)
-            ->shouldReceive('bind')->once()->with($mockRequest)
-            ->shouldReceive('getName')->once()->andReturn('form name')
-            ->getMock();
+        $mockForm = \Mockery::mock('Symfony\Component\Form\Form')->makePartial();
+        $mockForm->shouldReceive('createView')->once()->andReturn('view');
+        $mockForm->shouldReceive('isValid')->once()->andReturn(false);
+        $mockForm->shouldReceive('bind')->once()->with($mockRequest);
+        $mockForm->shouldReceive('getName')->once()->andReturn('form name');
 
         $mockEntity = M::mock()
             ->shouldReceive('getName')->times(0)->andReturn('entity name')
@@ -497,12 +488,11 @@ class CrudControllerTest extends TestBaseClass
         $mockRequest = M::mock('Symfony\Component\HttpFoundation\Request[isMethod]');
         $mockRequest->shouldReceive('isMethod')->once()->andReturn(true);
 
-        $mockFormBuilder = M::mock('Symfony\Component\Form\FormBuilder')->shouldReceive('getInheritData')->zeroOrMoreTimes()->andReturn(false);
-
-        $mockForm = M::mock('Symfony\Component\Form\Form[createView,bind,isValid]', $mockFormBuilder);
+        $mockForm = \Mockery::mock('Symfony\Component\Form\Form')->makePartial();
         $mockForm->shouldReceive('createView')->never()->andReturn('view');
         $mockForm->shouldReceive('isValid')->once()->andReturn(true);
         $mockForm->shouldReceive('bind')->once()->with($mockRequest);
+
 
         $mockEntity = M::mock();
         $mockEntity->shouldReceive('getName')->never()->andReturn('entity name');
