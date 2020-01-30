@@ -605,7 +605,7 @@ class CrudControllerTest extends TestBaseClass
 
     public function testGetEntityForm()
     {
-        $controller = M::mock('Kodify\SimpleCrudBundle\Controller\AbstractCrudController[]');
+        $controller = M::mock('Kodify\SimpleCrudBundle\Controller\AbstractCrudController[]')->makePartial();
 
         $refl    = new \ReflectionObject($controller);
         $message = $refl->getProperty('formClassName');
