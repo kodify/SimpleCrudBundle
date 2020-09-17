@@ -2,15 +2,16 @@
 
 namespace Kodify\SimpleCrudBundle\Tests;
 
-use \Mockery as M;
-
-
+use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Form\Extension\Templating\TemplatingExtension;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
+use Symfony\Component\Routing\Router;
 
 abstract class TestBaseClass extends KernelTestCase
 {
@@ -57,17 +58,17 @@ abstract class TestBaseClass extends KernelTestCase
         $container->enterScope('request');
         $container->set('request', $request, 'request');
 
-        $mockRouter = $this->getMock('Router', array('generate'));
+        $mockRouter = $this->createPartialMock(Router::class, array('generate'));
         $mockRouter->expects($this->any())
             ->method('generate')
             ->will($this->returnArgument(0));
 
         $container->set('router', $mockRouter);
 
-        $mockTemplating = $this->getMock('Templating', array('renderResponse'));
+        $mockTemplating = $this->createPartialMock(TemplatingExtension::class, array('renderResponse'));
         $container->set('templating', $mockTemplating);
 
-        $mockTemplating = $this->getMock('Form', array('create', 'createView'));
+        $mockTemplating = $this->createPartialMock(Form::class, array('create', 'createView'));
         $container->set('form.factory', $mockTemplating);
 
         $controller->setContainer($container);
